@@ -1,0 +1,301 @@
+<app-fil-ariane [filAriane]="filAriane" [accueilVisible]="true"></app-fil-ariane>
+<a class="d-none download-link" #downloadLink></a>
+
+<div class="sirc-page-body row">
+  <div class="col mt-md-0">
+    <div *appSircLoader="loading">
+      <div class="sirc-block mb-2 acc-actions-rapides p-sm-1 row no-gutters">
+
+        <div class="row col-12">
+          <div class="sirc-fc-sm ar-item-container mt-1 pb-1" *ngIf="!userIsObservateur()">
+            <div class="row no-gutters">
+              <div class="ar-icone">
+                <i class="sirc-icon ico-creer-demande" (click)="actionSaisirDemandePapier()">
+                  <span class="path1"></span><span class="path2"></span><span class="path3"></span>
+                  <span class="path4"></span><span class="path5"></span><span class="path6"></span>
+                  <span class="path7"></span>
+                </i>
+              </div>
+              <div class="ar-item-infos-container col">
+                <div class="ar-item-titre fake-link col-12" (click)="actionSaisirDemandePapier()">Saisir une demande papier</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sirc-fc-sm ar-item-container mt-1 pb-1">
+            <div class="row no-gutters">
+              <div class="ar-icone">
+                <i class="sirc-icon ico-ouvrir-demande" (click)="actionOuvrirDemandeAvecNumero()">
+                  <span class="path1"></span><span class="path2"></span>
+                </i>
+              </div>
+              <div class="ar-item-infos-container col">
+                <div class="ar-item-titre fake-link col-12" (click)="actionOuvrirDemandeAvecNumero()">Ouvrir une demande avec son numéro</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sirc-fc-sm ar-item-container mt-1 pb-1" *ngIf="!userIsObservateur()">
+            <div class="row no-gutters">
+              <div class="ar-icone">
+                <i class="sirc-icon ico-upload" (click)="actionRecupererDemandeTeleRC()">
+                  <span class="path1"></span><span class="path2"></span><span class="path3"></span>
+                </i>
+              </div>
+              <div class="ar-item-infos-container col">
+                <div class="ar-item-titre fake-link col-12" (click)="actionRecupererDemandeTeleRC()">Récupérer une demande depuis TéléRC</div>
+              </div>
+            </div>
+          </div>
+  
+        </div>
+      </div>
+
+      <div class="sirc-filter-container">
+        <div class="sirc-title-block">
+          <div class="row d-flex align-items-center">
+            <h4 class="col mb-0 search-title">Recherche multicritères</h4>
+            <div class="col-4 d-flex align-items-center justify-content-end">
+              <span class="white d-flex align-items-center ng-star-inserted" *ngIf="!hideEncartFiltres && rechercheEffectuee">
+                <span class="d-none d-md-block" title="Afficher les filtres pour les modifier">Précisez votre recherche</span><i class="material-icons is-btn-big sirc-black filter-icon ml-1" (click)="visibilityChange()">tune</i>
+              </span>
+              <span class="white d-flex align-items-center ng-star-inserted" *ngIf="hideEncartFiltres && rechercheEffectuee">
+                <span class="d-none d-md-block">Réduire</span><i class="material-icons is-btn-big sirc-black filter-icon ml-1" (click)="visibilityChange()">vertical_align_top</i>
+              </span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- FORMULAIRE -->
+        <div class="sirc-block-recherche-p2 mb-2" *ngIf='hideEncartFiltres'>
+          <form [formGroup]="filtresForm" (ngSubmit)="rechercher(true)">
+            <div class="row">
+              <div class="col-12 col-md-6 col-filtres-employeur">
+                <div class="sirc-fc-lg">
+                  <label class="sirc-label-titre">Employeur</label>
+                </div>
+                <!-- INFORMATIONS Employeur -->
+                <div class="row no-gutters">
+                  <div class="sirc-fc-md-2">
+                    <label class="sirc-label">SIRET / URSSAF</label>
+                    <input class="sirc-field" type="text" formControlName="siretUrssaf" 
+                      [ngClass]="{'error' : hasError(siretUrssaf)}" placeholder="">
+                    <div class="sirc-errors-container" *ngIf="hasError(siretUrssaf)">
+                      <label class="sirc-info error" *ngIf="!!(siretUrssaf?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+                    </div>
+                  </div>
+                  <div class="sirc-fc-md-2">
+                    <label class="sirc-label">Raison sociale</label>
+                    <input class="sirc-field" type="text" formControlName="employeur.raisonSociale" 
+                      [ngClass]="{'error' : hasError(employeurRaisonSociale)}" placeholder="">
+                    <div class="sirc-errors-container" *ngIf="hasError(employeurRaisonSociale)">
+                      <label class="sirc-info error" *ngIf="!!(employeurRaisonSociale?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="sirc-fc-lg">
+                  <label class="sirc-label-titre">Salarié(e)</label>
+                </div>
+                <!-- INFORMATIONS Salarié -->
+                <div class="row no-gutters">
+                  <div class="sirc-fc-md-2">
+                    <label class="sirc-label">Nom</label>
+                    <input class="sirc-field" type="text" formControlName="salarie.nom" 
+                      [ngClass]="{'error' : hasError(salarieNom)}" placeholder="">
+                    <div class="sirc-errors-container" *ngIf="hasError(salarieNom)">
+                      <label class="sirc-info error" *ngIf="!!(salarieNom?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+                    </div>
+                  </div> 
+                  <div class="sirc-fc-md-2">
+                    <label class="sirc-label">Prénom</label>
+                    <input class="sirc-field" type="text" formControlName="salarie.prenom" 
+                      [ngClass]="{'error' : hasError(salariePrenom)}" placeholder="">
+                    <div class="sirc-errors-container" *ngIf="hasError(salariePrenom)">
+                      <label class="sirc-info error" *ngIf="!!(salariePrenom?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+                    </div>
+                  </div> 
+                </div>
+              </div>
+
+              <!-- INFORMATIONS DEMANDE 1-->
+              <div class="col-12">
+                <div class="row no-gutters">
+                  <div class="sirc-fc-lg">
+                    <label class="sirc-label-titre">La demande</label>
+                  </div>
+                  <div class="sirc-fc-sm-2">
+                    <label class="sirc-label">Numéro de la demande <i class="ml-1 material-icons is-btn-small primary" 
+                      matTooltip="Il est possible d'utiliser un caractère '*' en début, milieu ou 
+                      fin de chaîne afin de préciser 'Commence, contient ou fini par la chaîne saisie'.">help</i></label>
+                    <input class="sirc-field" type="text" formControlName="numero" 
+                      [ngClass]="{'error' : hasError(numero)}" placeholder=""
+                      maxlength = "13">
+                    <div class="sirc-errors-container" *ngIf="hasError(numero)">
+                      <label class="sirc-info error" *ngIf="!!(numero?.errors?.maxlength)">Taille maximale : 13 caractères</label>
+                    </div>
+                  </div> 
+                  <div class="sirc-fc-sm-2">
+                    <label class="sirc-label">Demande(s) télétransmise(s)</label>
+                    <mat-select class="sirc-field" formControlName="teletransmise" placeholder="">
+                      <mat-option [value]="null"></mat-option>
+                      <mat-option [value]=true title="Oui">Oui</mat-option>
+                      <mat-option [value]=false title="Non">Non</mat-option>
+                    </mat-select>
+                  </div>
+                  <div class="sirc-fc-sm-2">
+                    <label class="sirc-label">Étape</label>
+                    <mat-select class="sirc-field" formControlName="etape.code">
+                      <mat-option [value]="null" title=""></mat-option>
+                      <mat-option *ngFor="let etape of etapes" [value]="etape.code" title="{{etape.intitule}}">
+                        {{etape.intitule}}
+                      </mat-option>
+                    </mat-select>
+                  </div> 
+                  <!-- INFORMATIONS DEMANDE 2-->
+                  <div class="sirc-fc-sm-2">
+                    <label class="sirc-label">Décision</label>
+                    <mat-select class="sirc-field" formControlName="statut.code">
+                      <mat-option [value]="null" title=""></mat-option>
+                      <mat-option *ngFor="let statut of statuts" [value]="statut.code" title="{{statut.intitule}}">
+                        {{statut.intitule}} 
+                      </mat-option>
+                    </mat-select>
+                  </div> 
+                  <div class="sirc-fc-sm-2">
+                    <label class="sirc-label">Région</label>
+                    <mat-select class="sirc-field" formControlName="organismeAttribution.departement.region.id" (selectionChange)="regionChange()">
+                      <mat-option [value]="null" title=""></mat-option>
+                      <mat-option *ngFor="let region of regionsFiltre" [value]="region.id" title="{{region.intitule}}">
+                        {{region.intitule}} 
+                      </mat-option>
+                    </mat-select>
+                  </div>
+                  <div class="sirc-fc-sm-2">
+                    <label class="sirc-label">Département</label>
+                    <mat-select class="sirc-field" formControlName="organismeAttribution.departement.id" (selectionChange)="departementChange()">
+                      <mat-option [value]="null" title=""></mat-option>
+                      <mat-option *ngFor="let departement of departementsFiltre" [value]="departement.id" title="{{departement.intitule}}">
+                        {{departement.intitule}} 
+                      </mat-option>
+                    </mat-select>
+                  </div>
+                  <!-- INFORMATIONS DEMANDE 3-->
+                  <div class="sirc-fc-sm-2" *ngIf="organismeAttributionId.value">
+                    <label class="sirc-label d-flex">Organisme concerné<i class="ml-1 material-icons is-btn-small danger"
+                      title="Supprimer le filtre" (click)="supprimerFiltreOrganisme()">close</i></label>
+                    <input class="sirc-field" type="text" formControlName="organismeAttribution.id" value="{{getOrganismeFiltre()?.nom}}">
+                  </div> 
+                  <div class="sirc-fc-sm-2">
+                    <label class="sirc-label">Date de réception min.</label>
+                    <div class="sirc-date-field-container">
+                      <input class="sirc-field" [ngClass]="{'error' : hasError(dateReceptionMin)}"
+                        [matDatepicker]="pickerMin" [matDatepickerFilter]="minFilter" 
+                        (dateChange)="dateReceptionMinChange(dateReceptionMin.value)"  formControlName="dateReceptionMin" [readonly]="true"/>
+                      <mat-datepicker-toggle [for]="pickerMin" ></mat-datepicker-toggle>
+                      <mat-datepicker #pickerMin ></mat-datepicker>
+                      <i class="material-icons is-btn-small" (click)="supprimerDate(dateReceptionMin, true)">close</i>
+                    </div>
+                  </div>
+                  <div class="sirc-fc-sm-2">
+                    <label class="sirc-label">Date de réception max.</label>
+                    <div class="sirc-date-field-container">
+                      <input class="sirc-field" [ngClass]="{'error' : hasError(dateReceptionMax)}"
+                        [matDatepicker]="pickerMax" [matDatepickerFilter]="maxFilter" 
+                        (dateChange)="dateReceptionMaxChange(dateReceptionMax.value)"  formControlName="dateReceptionMax" [readonly]="true"/>
+                      <mat-datepicker-toggle [for]="pickerMax" ></mat-datepicker-toggle>
+                      <mat-datepicker #pickerMax ></mat-datepicker>
+                      <i class="material-icons is-btn-small" (click)="supprimerDate(dateReceptionMax, false)">close</i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="buttons-container">
+              <button *ngIf="!loadingListe" type="button" class="btn-sirc-o btn-small no-outline"
+                (click)="reinitialiserFiltres()">Réinitialiser les filtres</button>
+              <button *ngIf="!loadingListe" type="submit" class="btn-sirc btn-icon-small" title="Rechercher">
+                <i class="material-icons">search</i> Rechercher
+              </button>
+              <mat-progress-bar mode="indeterminate" *ngIf="loadingListe"></mat-progress-bar>
+            </div>
+
+            <input [hidden]="true" type="text" formControlName="organismeAttribution.id">
+          </form>
+        </div>
+      </div>
+
+      <div class="mb-2" *ngIf="rechercheEffectuee">
+        <div class="table-responsive" *appSircLoader="loadingListe">
+          <table class="table sirc-table sirc-table-search-demande">
+            <thead>
+              <tr>
+                <th><div class="sortable" (click)="triColonne('numero')">
+                  <span>Numéro</span><i class="material-icons">{{getSortIconName('numero')}}</i>
+                </div></th>
+                <th><div class="sortable" (click)="triColonne('dateReception')">
+                  <span>Date de réception</span><i class="material-icons">{{getSortIconName('dateReception')}}</i>
+                </div></th>
+                <th><div class="sortable" (click)="triColonne('employeur.raisonSociale')">
+                  <span>Raison sociale</span><i class="material-icons">{{getSortIconName('employeur.raisonSociale')}}</i>
+                </div></th>
+                <th><div class="sortable" (click)="triColonne('siretUrssaf')">
+                  <span>SIRET/URSSAF</span><i class="material-icons">{{getSortIconName('siretUrssaf')}}</i>
+                </div></th>
+                <th><div class="sortable" (click)="triColonne('salarie.nom')">
+                  <span>Salarié(e)</span><i class="material-icons">{{getSortIconName('salarie.nom')}}</i>
+                </div></th>
+                <th><div class="sortable" (click)="triColonne('etape.code')">
+                  <span>Etape</span><i class="material-icons">{{getSortIconName('etape.code')}}</i>
+                </div></th>
+                <th><div class="sortable" (click)="triColonne('statut.code')">
+                  <span>Décision</span><i class="material-icons">{{getSortIconName('statut.code')}}</i>
+                </div></th>
+                <th><div class="sortable" (click)="triColonne('dateDecision')">
+                  <span>Date de décision</span><i class="material-icons">{{getSortIconName('dateDecision')}}</i>
+                </div></th>
+                <th class="actions"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let d of miniDemandes;let i = index; let odd = odd;" [ngClass]="{odd: odd}">
+                <td>{{d?.numero}}</td>
+                <td>{{d?.dateReception | date: 'dd/MM/yyyy'}}</td>
+                <td>{{d?.employeur?.raisonSociale}}</td>
+                <td>{{d?.employeur?.siret}} {{d?.employeur?.urssaf}}</td>
+                <td>{{d?.salarie?.nom}} {{d?.salarie?.prenom}}</td>
+                <td class="bold" [ngClass]="{'ainstruire': isAInstruire(d?.etape?.code), 'instruits': isInstruite(d?.etape?.code), 'clos': isCloture(d?.etape?.code)}">{{d?.etape?.intitule}}</td>
+                <td class="bold" [ngClass]="{'isRecevable': isRecevable(d?.statut?.code), 'isIrrecevable': isIrrecevable(d?.statut?.code), 'accordee': isAccordee(d?.statut?.code)}">{{d?.statut?.intitule}}</td>
+                <td>{{d?.dateDecision | date: 'dd/MM/yyyy'}}</td>
+                <td class="td-btns">
+                  <i class="material-icons is-btn-small success" title="Consulter la demande" (click)="consultDemande(d)">visibility</i>
+                  <i class="material-icons is-btn-small primary" title="Modifier la demande" (click)="modifDemande(d)" 
+                    *ngIf="isUdConcernee(d) && isUserQualifiedToModify()" [ngClass]="{'inactif': isCloture(d?.etape?.code)}">edit</i>
+                  <i class="material-icons is-btn-small primary" title="Utiliser demande comme modèle" 
+                    *ngIf="isUdConcernee(d) && isUserQualifiedToModify() && isADupliquer(d)" (click)="dupliquerDemande(d)">library_books</i>
+                  <i class="material-icons is-btn-small danger" title="Supprimer la demande" (click)="supprDemande(d)" 
+                    *ngIf="isUdConcernee(d) && isUserQualifiedToModify()">delete</i>
+                </td>
+              </tr>
+              <tr *ngIf="!miniDemandes || miniDemandes.length === 0" class="no-result">
+                <td [colSpan]="9">Aucune donnée ne correspond aux termes de recherche spécifiés.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <app-pager [pager]="searchRequestItem.pager"
+            [inactif]="filtresForm.invalid || loadingListe"
+            (navigateCallback)="rechercher()"></app-pager>
+        <div class="buttons-container-footer">
+          <mat-progress-bar mode="indeterminate" *ngIf="isExporting"></mat-progress-bar>
+          <button class="btn-sirc btn-icon-small" *ngIf="!isExporting"
+            title="Exporter les données" (click)="exporter()" [disabled]="loadingListe">
+            <i class="material-icons">archive</i> Exporter
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

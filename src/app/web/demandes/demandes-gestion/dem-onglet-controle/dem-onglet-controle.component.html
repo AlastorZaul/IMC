@@ -1,0 +1,74 @@
+<h3 class="mb-1">Contrôle</h3>
+<div class="sirc-block-p2 mb-2">
+  <div class="row">
+    <div class="col">
+      <!-- Infos -->
+      <div class="row mt-1 mb-1" *ngIf="messageInfoVisible()">
+        <div class="sirc-fc-lg no-result" >
+          <div class="warning bold mb-2">
+            Les opérations de vérification du nombre de demandes RC pour le même établissement / la même entreprise ne peuvent être effectuées 
+            qu'une fois les champs SIRET/URSSAF et date de réception renseignés et valides.
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="!messageInfoVisible()">
+        <!-- Nombre de ruptures conventionnelles dans l'établissement -->
+        <div class="col-12 col-md-6 col-entretien-employeur">
+          <div class="sirc-fc-lg">
+            <h4>Établissement</h4>
+          </div>
+          <div class="row no-gutters">
+            <div class="sirc-fc-lg">
+              <label class="sirc-label">Nombre de ruptures conventionnelles dans l'établissement</label>
+            </div>
+            <div class="col-12" *ngIf="loaderEtab">
+              <div class="row no-gutters d-flex justify-content-center">
+                <mat-progress-bar class="col-12" mode="indeterminate"></mat-progress-bar>
+                <div class="col-12 p-1 no-result">Calcul en cours, veuillez patienter</div>
+              </div>
+            </div>
+            <div class="col-12 d-flex justify-content-center" *ngIf="existeResultatsEtablissement()">
+              <button (click)="showDemandesEtab()" class="btn-sirc btn-icon-small" type="button" title="Afficher la liste">
+                Afficher la liste
+              </button>
+            </div>
+            <div *ngIf="aucunResultatEtablissement()" class="col-12 no-result">
+              Aucune autre demande de rupture conventionnelle dans cet établissement.
+            </div>
+          </div>
+        </div>
+        <!-- Nombre de ruptures conventionnelles dans l'entreprise -->
+        <div class="col-12 col-md-6">
+          <div class="sirc-fc-lg">
+            <h4>Entreprise</h4>
+          </div>
+          <div class="row no-gutters">
+            <div class="sirc-fc-lg">
+              <label class="sirc-label">Nombre de ruptures conventionnelles dans l'entreprise</label>
+            </div>
+            <div class="col-12" *ngIf="loaderEntre">
+              <div class="row no-gutters d-flex justify-content-center">
+                <mat-progress-bar class="col-12" mode="indeterminate"></mat-progress-bar>
+                <div class="col-12 p-1 no-result">Calcul en cours, veuillez patienter</div>
+              </div>
+            </div>
+            <div class="col-12 d-flex justify-content-center" *ngIf="existeResultatsEntreprise()">
+              <button (click)="showDemandesEntre()" class="btn-sirc btn-icon-small" type="button" title="Afficher la liste">
+                Afficher la liste
+              </button>
+            </div>
+            <div *ngIf="aucunResultatEntreprise()" class="col-12 no-result">
+              Aucune autre demande de rupture conventionnelle dans cette entreprise.
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Messages d'alerte -->
+      <div class="row mt-2">
+        <div class="sirc-fc-lg warning" *ngFor="let m of messagesAlerte">
+          <label class="sirc-label"> - {{m.msg}}</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

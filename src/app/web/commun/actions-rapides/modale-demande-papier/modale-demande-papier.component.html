@@ -1,0 +1,79 @@
+<div class="sirc-modale-titre-container">
+  <h3>Saisir une demande papier</h3>
+</div>
+
+<form [formGroup]="modeleForm" (ngSubmit)="commencer()">
+<div class="sirc-modale-content-container">
+  <div class="row">
+    <div class="sirc-fc-md">
+      <label class="sirc-label" [ngClass]="{'disabled' : siret.disabled}">Numéro de SIRET</label>
+      <input class="sirc-field" type="text" formControlName="siret" (change)="siretChange()"
+        [ngClass]="{'error' : hasError(siret)}" placeholder="SIRET (14 chiffres)">
+      <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(siret)}">
+        <label class="sirc-info error" *ngIf="!!(siret?.errors?.required)">Veuillez renseigner ce champ, ou le champ "Numéro de cotisant"</label>
+        <label class="sirc-info error" *ngIf="!!(siret?.errors?.isNumeroSiret)">Le numéro de SIRET saisi n'est pas valide. La clé de Luhn n'est pas respectée</label>
+      </div>
+    </div>
+    <div class="sirc-fc-md">
+      <label class="sirc-label" [ngClass]="{'disabled' : urssaf.disabled}">Numéro de cotisant</label>
+      <input class="sirc-field" type="text" formControlName="urssaf" (change)="urssafChange()"
+        [ngClass]="{'error' : hasError(urssaf)}" placeholder="ex: numéro URSSAF">
+      <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(urssaf)}">
+        <label class="sirc-info error" *ngIf="!!(urssaf?.errors?.required)">Veuillez renseigner ce champ, ou le champ "Numéro de SIRET"</label>
+        <label class="sirc-info error" *ngIf="!!(urssaf?.errors?.maxlength)">Taille maximale : 30 caractères</label>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="sirc-fc-lg">
+      <label class="sirc-label">Nom de famille du salarié</label>
+      <input class="sirc-field" type="text" formControlName="nom"
+        [ngClass]="{'error' : hasError(nom)}">
+      <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(nom)}">
+        <label class="sirc-info error" *ngIf="!!(nom?.errors?.required)">Ce champ est obligatoire</label>
+        <label class="sirc-info error" *ngIf="!!(nom?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+      </div>
+    </div>
+  </div>
+  <!-- DEMANDES SIMILAIRES -->
+  <div class="row p-1 no-gutters ar-bloc-demande" *ngIf="demandes">
+    <p class="col-12 italic">Une ou plusieurs demandes existantes semblent correspondre à votre saisie.</p>
+    <div class="col-12 table-responsive">
+      <table class="table sirc-table sirc-table-search-demande">
+        <thead class="thead-gray">
+          <tr>
+            <th><span>Numéro</span></th>
+            <th><span>Employeur</span></th>
+            <th><span>Salarié(e)</span></th>
+            <th><span>Etat</span></th>
+            <th><span>Statut</span></th>
+            <th class="actions"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let d of demandes;let i = index; let odd = odd;" [ngClass]="{odd: odd}">
+            <td>{{d?.numero}}</td>
+            <td>{{d?.employeur?.siret}} {{d?.employeur?.urssaf}}</td>
+            <td>{{d?.salarie?.nom}} {{d?.salarie?.prenom}}</td>
+            <td>{{d?.etape?.intitule}}</td>
+            <td>{{d?.statut?.intitule}}</td>
+            <td class="td-btns">
+              <button type="button" class="btn-sirc-o btn-small" (click)="ouvrirDemande(d)">Ouvrir</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-12 d-flex justify-content-center">
+      <button type="button" class="btn-sirc-success btn-small col-12 col-sm-3"
+        (click)="poursuivreCreation()">Poursuivre la création</button>
+    </div>
+  </div>
+</div>
+
+<div class="sirc-modale-boutons-container">
+  <button *ngIf="!submitting" type="button" class="btn-sirc-o btn-small col-12 col-sm-5" (click)="close()">Sortir</button>
+  <button *ngIf="!submitting" type="submit" class="btn-sirc btn-small col-12 col-sm-5" cdkFocusInitial>Commencer</button>
+  <mat-progress-bar mode="indeterminate" *ngIf="submitting"></mat-progress-bar>
+</div>
+</form>

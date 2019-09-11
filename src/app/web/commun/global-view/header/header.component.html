@@ -1,0 +1,52 @@
+<header class="sirc-header">
+    <div class="container pt-2">
+        <div class="header-row row justify-content-center">
+            <div class="header-logo-container col-6 col-sm-3 col-lg-2 ">
+                <a [routerLink]="['/accueil']">
+                    <div class="header-logo-box p-1 d-flex align-items-center">
+                        <img src="assets/images/logo_Marianne.jpg" />
+                    </div>
+                </a>
+            </div>
+            <div class="header-infos-container col p-1">
+                <div class="header-title-container col-12 no-gutters">
+                    <p class="title col-12 mb-1 mb-md-0">Outil de gestion</p>
+                    <p class="subtitle col-12 mb-0">des ruptures conventionnelles individuelles <span class="version">(v{{version}})</span></p>
+                </div>
+                <div class="header-menu-user-container col-12">
+                    <div class="row">
+                        <div class="header-menu-container mt-1 col-12 col-lg-9">
+                            <div class="header-menu dropdown d-inline-flex flex-wrap">
+                                <button class="menu-button btn" routerLinkActive="menu-item-active" routerLink="/accueil">Accueil</button>
+                                <button class="menu-button btn" routerLinkActive="menu-item-active" [routerLinkActiveOptions]="{exact:
+                                    true}" routerLink="/demandes">Recherche</button>
+                                <button *ngIf="showItemsGestionnaire()" class="menu-button btn" routerLinkActive="menu-item-active" routerLink="/demandes/rapports">Rapports</button>
+                                <button *ngIf="showItemsAdmins()" class="menu-button btn dropdown-toggle" type="button" id="dropdownMenuButton" 
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Administration
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a *ngIf="showItemsAdmins()" class="dropdown-item" routerLinkActive="menu-item-active" routerLink="/administration/organismes">Organismes</a>
+                                    <a *ngIf="showItemsAdminNational()" class="dropdown-item" routerLinkActive="menu-item-active" routerLink="/administration/jours-chomes">Jours chômés</a>
+                                    <a *ngIf="showItemsAdminNational()" class="dropdown-item" routerLinkActive="menu-item-active" routerLink="/administration/regions-departements">Régions et départements</a>
+                                    <a *ngIf="showItemsAdmins()" class="dropdown-item" routerLinkActive="menu-item-active" routerLink="/administration/utilisateurs">Comptes utilisateurs</a>
+                                    <a *ngIf="showItemsAdminNational()" class="dropdown-item" routerLinkActive="menu-item-active" routerLink="/administration/parametres">Paramètres</a>
+                                    <div *ngIf="showItemsAdminNational()" class="dropdown-divider"></div>
+                                    <span *ngIf="showItemsAdminNational()" class="dropdown-item cursor-pointer" (click)="reindexation()">Réindexer les demandes</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="header-user-container mt-1 col-12 col-lg-3">
+                            <div class="row">
+                                <div class="user-infos col-12">{{ getLoggedUser()?.identite }}</div>
+                                <p class="user-logout col-12 d-flex flex-row align-items-center justify-content-end" >
+                                    <span (click)="logout()">Se déconnecter</span><i class="material-icons" (click)="logout()">close</i>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

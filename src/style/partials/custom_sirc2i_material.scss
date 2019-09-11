@@ -1,0 +1,9 @@
+@import '~@angular/material/theming';
+@include mat-core();
+
+$sirc-mat-app-primary: mat-palette($mat-indigo);
+$sirc-mat-app-accent:  mat-palette($mat-indigo, A200, A100, A400);
+$sirc-mat-app-warn:    mat-palette($mat-red);
+$sirc-mat-app-theme: mat-light-theme($sirc-mat-app-primary, $sirc-mat-app-accent, $sirc-mat-app-warn);
+
+@include angular-material-theme($sirc-mat-app-theme);

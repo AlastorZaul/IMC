@@ -1,0 +1,33 @@
+<div class="row no-gutters d-flex justify-content-center commun-decision-container">
+  <div class="decision-commun-block" 
+    [ngClass]="{'isRecevable-border': isRecevable(statut?.value?.code),
+    'isIrrecevable-border': isIrrecevable(statut?.value?.code) || isRefusee(statut?.value?.code),
+    'accordee-border': isAccordeeExpres(statut?.value?.code) || isAccordeeImplicite(statut?.value?.code)}">
+    <div class="col">
+      <label class="sirc-label">Etat de la demande : {{statut?.value?.intitule}}</label>
+    </div>
+  </div>
+</div>
+<div class="sirc-block mb-2">
+  <div class="mt-2">
+    <div class="row d-flex align-items-center pl-1 pr-1">
+      <div class="col-12 col-sm d-flex align-items-center">
+        <label class="sirc-label mr-1">Numéro de la demande : </label>
+        <label>{{(numero?.value)? numero?.value : 'Brouillon'}}</label>
+      </div>
+      <div class="col-12 col-sm d-flex align-items-center justify-content-end">
+        <label class="sirc-label mr-1">Date de réception : </label>
+        <label>{{(dateReception?.value)? (dateReception?.value | date:'dd/MM/y') : 'Non-renseignée'}}</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 mt-1 cloture bold" *ngIf="(id?.value) && isCloture()">La demande est clôturée</div>
+    </div>
+    <div class="row">
+      <div class="col-12 alert-courrier mt-1" *ngIf="(id?.value) && isRecevable(statut?.value?.code) && !isCourrierExists(TYPE_COURRIER.TCOUR_RPT_CODE)">L'accusé de réception n'a pas été envoyé</div>
+      <div class="col-12 alert-courrier mt-1" *ngIf="(id?.value) && isIrrecevable(statut?.value?.code) && !isCourrierExists(TYPE_COURRIER.TCOUR_IRR_CODE)">L'avis d'irrecevabilité n'a pas été envoyé</div>
+      <div class="col-12 alert-courrier mt-1" *ngIf="(id?.value) && isRefusee(statut?.value?.code) && !isCourrierExists(TYPE_COURRIER.TCOUR_REF_CODE)">Le courrier de refus n'a pas été envoyé</div>
+      <div class="col-12 alert-courrier mt-1" *ngIf="(id?.value) && isAccordeeExpres(statut?.value?.code) && !isCourrierExists(TYPE_COURRIER.TCOUR_ACC_CODE)">Le courrier d'accord exprès n'a pas été envoyé</div>
+    </div>
+  </div>
+</div>

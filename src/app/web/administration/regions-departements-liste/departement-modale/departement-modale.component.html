@@ -1,0 +1,60 @@
+<div class="sirc-modale-titre-container" [ngSwitch]="createMode">
+  <h3 *ngSwitchCase="true">Ajouter un département</h3>
+  <h3 *ngSwitchCase="false">Modifier un département</h3>
+</div>
+
+<form [formGroup]="modeleForm" (ngSubmit)="save()">
+<div class="sirc-modale-content-container">
+    <div class="row">
+      <div class="sirc-fc-md">
+        <label class="sirc-label">Nom</label>
+        <input class="sirc-field" type="text" formControlName="intitule" 
+          [ngClass]="{'error' : hasError(intitule)}" placeholder="Nom du département">
+        <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(intitule)}">
+          <label class="sirc-info error" *ngIf="!!(intitule?.errors?.required)">Ce champ est obligatoire</label>
+          <label class="sirc-info error" *ngIf="!!(intitule?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+        </div>
+      </div>
+      <div class="sirc-fc-md">
+        <label class="sirc-label">Code</label>
+        <input class="sirc-field" type="text" formControlName="code" 
+          [ngClass]="{'error' : hasError(code)}" placeholder="Code du département">
+        <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(code)}">
+          <label class="sirc-info error" *ngIf="!!(code?.errors?.required)">Ce champ est obligatoire</label>
+          <label class="sirc-info error" *ngIf="!!(code?.errors?.maxlength)">Taille maximale : 10 caractères</label>
+        </div>
+      </div> 
+
+      <div class="sirc-fc-md">
+        <label class="sirc-label">Organisme de référence</label>
+        <mat-select class="sirc-field" formControlName="organismeReferent" [ngClass]="{'error' : hasError(organismeReferent)}">
+          <mat-option *ngFor="let org of listeOrganismes" [value]="org" title="{{ org.nomCourt }} - {{ org.nom }} ">
+            {{ org.nomCourt }} - {{ org.nom }} 
+          </mat-option>
+        </mat-select>
+        <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(organismeReferent)}">
+          <label class="sirc-info error" *ngIf="!!(organismeReferent?.errors?.required)">Ce champ est obligatoire</label>
+        </div>
+      </div> 
+      <div class="sirc-fc-md">
+        <label class="sirc-label">Région</label>
+        <mat-select class="sirc-field" formControlName="region" [ngClass]="{'error' : hasError(region)}">
+          <mat-option *ngFor="let region of listeRegions"  [value]="region" title="{{region.intitule}}">
+            {{ region.intitule }}
+          </mat-option>
+        </mat-select>
+        <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(region)}">
+          <label class="sirc-info error" *ngIf="!!(region?.errors?.required)">Ce champ est obligatoire</label>
+        </div>
+      </div> 
+    </div>
+</div>
+
+<div class="sirc-modale-boutons-container">
+  <button *ngIf="!submitting" type="button" class="btn-sirc-o btn-small col-12 col-sm-5"
+    (click)="close()">Annuler</button>
+  <button *ngIf="!submitting" type="submit" class="btn-sirc-success btn-small col-12 col-sm-5"
+    cdkFocusInitial>Enregistrer</button>
+  <mat-progress-bar mode="indeterminate" *ngIf="submitting"></mat-progress-bar>
+</div>
+</form>

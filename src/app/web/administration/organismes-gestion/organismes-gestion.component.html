@@ -1,0 +1,44 @@
+<app-fil-ariane [filAriane]="filAriane" [accueilVisible]="true"></app-fil-ariane>
+
+<div class="sirc-page-body row">
+  <div class="col mt-md-0" [ngSwitch]="createMode" [ngClass]="{'error' : hasGroupError(modelForm)}">
+    <app-loader *ngIf="loading"></app-loader>
+    <div [ngClass]="{hidden: loading}">
+      <h3 *ngSwitchCase="true">Ajouter un organisme</h3>
+      <h3 *ngSwitchCase="false">Modifier un organisme</h3>
+      
+      <!-- FORMULAIRE -->
+      <form [formGroup]="modelForm" (ngSubmit)="save()">
+        <div class="sirc-block-p2 mb-2">
+          <mat-tab-group animationDuration="0ms" [ngClass]="{'error' : hasGroupError(modelForm)}">
+            <mat-tab>
+              <ng-template mat-tab-label>
+                <div class="sirc-mat-tab-titre" [ngClass]="{'error' : hasGroupError(modelForm)}">Informations principales</div>
+              </ng-template>
+              <app-org-onglet-infos [submitted]="submitted" [listeDept]="listeDept"></app-org-onglet-infos>
+            </mat-tab>
+            <mat-tab label="Organismes liés">
+              <app-org-onglet-fils [submitted]="submitted" [canEdit]="canEditEnfants"
+               [listeOrg]="listeOrg" [currentOrganismeId]="currentOrganismeId"></app-org-onglet-fils>
+            </mat-tab>
+            <mat-tab label="Signatures">
+              <app-org-onglet-signatures [submitted]="submitted"></app-org-onglet-signatures>
+            </mat-tab>
+            <mat-tab label="Jours chômés">
+              <app-org-onglet-jc [submitted]="submitted" [listeJc]="listeJc"></app-org-onglet-jc>
+            </mat-tab>
+          </mat-tab-group>
+        </div>
+        <div class="sirc-modale-boutons-container">
+          <button *ngIf="!submitting && (!modelForm.dirty)" type="button" class="btn-sirc-o btn-small"
+            (click)="sortir()">Sortir</button>
+          <button *ngIf="!submitting && (modelForm.dirty)" type="button" class="btn-sirc-o btn-small"
+            (click)="sortir()">Annuler</button>
+          <button *ngIf="!submitting" type="submit" class="btn-sirc-success btn-small"
+            cdkFocusInitial>Enregistrer</button>
+          <mat-progress-bar mode="indeterminate" *ngIf="submitting"></mat-progress-bar>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

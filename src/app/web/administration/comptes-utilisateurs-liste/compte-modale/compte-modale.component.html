@@ -1,0 +1,86 @@
+<div class="sirc-modale-titre-container" [ngSwitch]="createMode">
+  <h3 *ngSwitchCase="true">Ajouter un compte utilisateur</h3>
+  <h3 *ngSwitchCase="false">Modifier un compte utilisateur</h3>
+</div>
+
+<form [formGroup]="modeleForm" (ngSubmit)="save()">
+<div class="sirc-modale-content-container">
+  <div class="row">
+    <div class="sirc-fc-md">
+      <label class="sirc-label">Identifiant</label>
+      <input class="sirc-field" type="text" formControlName="identifiant"
+        [ngClass]="{'error' : hasError(identifiant)}" placeholder="Identifiant du compte AD Ministère">
+      <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(identifiant)}">
+        <label class="sirc-info error" *ngIf="!!(identifiant?.errors?.required)">Ce champ est obligatoire</label>
+        <label class="sirc-info error" *ngIf="!!(identifiant?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+      </div>
+    </div>
+  </div>
+  <div class="row mb-1">
+    <div class="sirc-fc-sm">
+        <label class="sirc-label">Profil</label>
+        <mat-select class="sirc-field" formControlName="profil" [ngClass]="{'error' : hasError(profil)}">
+          <mat-option *ngFor="let prf of listeProfils"  [value]="prf" title="{{prf.intitule}}">
+            {{ prf.intitule }}
+          </mat-option>
+        </mat-select>
+        <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(profil)}">
+          <label class="sirc-info error" *ngIf="!!(profil?.errors?.required)">Ce champ est obligatoire</label>
+        </div>
+      </div> 
+    <div class="sirc-fc-fill">
+      <label class="sirc-label">Organisme</label>
+      <mat-select class="sirc-field" formControlName="organisme" [ngClass]="{'error' : hasError(organisme)}">
+        <mat-option *ngFor="let org of listeOrganismes" [value]="org" title="{{ org.nomCourt }} - {{ org.nom }} ">
+          {{ org.nomCourt }} - {{ org.nom }} 
+        </mat-option>
+      </mat-select>
+      <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(organisme)}">
+        <label class="sirc-info error" *ngIf="!!(organisme?.errors?.required)">Ce champ est obligatoire</label>
+      </div>
+    </div> 
+  </div>
+  <div class="row">
+    <div class="sirc-fc-md">
+      <label class="sirc-label">Nom</label>
+      <input class="sirc-field" type="text" formControlName="nom" [ngClass]="{'error' : hasError(nom)}" >
+      <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(nom)}">
+        <label class="sirc-info error" *ngIf="!!(nom?.errors?.required)">Ce champ est obligatoire</label>
+        <label class="sirc-info error" *ngIf="!!(nom?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+      </div>
+    </div>
+    <div class="sirc-fc-md">
+      <label class="sirc-label">Prénom</label>
+      <input class="sirc-field" type="text" formControlName="prenom" [ngClass]="{'error' : hasError(prenom)}" >
+      <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(prenom)}">
+        <label class="sirc-info error" *ngIf="!!(prenom?.errors?.required)">Ce champ est obligatoire</label>
+        <label class="sirc-info error" *ngIf="!!(prenom?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+      </div>
+    </div>
+    <div class="sirc-fc-md">
+      <label class="sirc-label">Téléphone</label>
+      <input class="sirc-field" type="text" formControlName="telephone" [ngClass]="{'error' : hasError(telephone)}" >
+      <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(telephone)}">
+        <label class="sirc-info error" *ngIf="!!(telephone?.errors?.maxlength)">Taille maximale : 20 caractères</label>
+      </div>
+    </div>
+    <div class="sirc-fc-md">
+      <label class="sirc-label">Courriel</label>
+      <input class="sirc-field" type="text" formControlName="courriel" [ngClass]="{'error' : hasError(courriel)}" >
+      <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(courriel)}">
+        <label class="sirc-info error" *ngIf="!!(courriel?.errors?.required)">Ce champ est obligatoire</label>
+        <label class="sirc-info error" *ngIf="!!(courriel?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+        <label class="sirc-info error" *ngIf="!!(courriel?.errors?.email)">Adresse courriel invalide</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sirc-modale-boutons-container">
+  <button *ngIf="!submitting" type="button" class="btn-sirc-o btn-small col-12 col-sm-5"
+    (click)="close()">Annuler</button>
+  <button *ngIf="!submitting" type="submit" class="btn-sirc-success btn-small col-12 col-sm-5"
+    cdkFocusInitial>Enregistrer</button>
+  <mat-progress-bar mode="indeterminate" *ngIf="submitting"></mat-progress-bar>
+</div>
+</form>

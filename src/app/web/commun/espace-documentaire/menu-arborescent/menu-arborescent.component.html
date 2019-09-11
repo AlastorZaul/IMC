@@ -1,0 +1,15 @@
+<ng-container *ngTemplateOutlet="arborescence;context:{article:this.article}"></ng-container>
+
+<ng-template #arborescence let-article="article">
+  <ul *ngIf="article?.enfants?.length > 0 else noArborescenceData">
+    <div *ngFor="let enf of article?.enfants">
+    <li class="menu-arbo-item"><i class="material-icons">subdirectory_arrow_right</i><a routerLink="/{{ROUTES.ESPACE_DOCUMENTAIRE}}/{{enf?.id}}">{{enf?.titre}}</a></li>
+      <div *ngIf="enf?.enfants?.length > 0">
+        <ng-container *ngTemplateOutlet="arborescence;context:{article:enf}"></ng-container>
+      </div>
+    </div>
+  </ul>
+</ng-template>
+<ng-template #noArborescenceData>
+  <div class="menu-arbo-nodata">Aucune page trouvée</div>
+</ng-template>

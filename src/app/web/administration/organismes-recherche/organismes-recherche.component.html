@@ -1,0 +1,92 @@
+<app-fil-ariane [filAriane]="filAriane" [accueilVisible]="true"></app-fil-ariane>
+
+<div class="sirc-page-body row">
+  <div class="col mt-md-0">
+    <h1 class="mb-0">Organismes</h1>
+    
+    <div *appSircLoader="loading">
+      <div class="sirc-filter-container">
+        <div class="buttons-container-header">
+          <button class="btn-sirc-o btn-icon-small no-outline" *ngIf="userIsAdminNational()"
+            title="Ajouter un organisme" routerLink="/{{_ROUTES.ADMINISTRATION}}/{{_ROUTES.ORGANISMES}}/{{_ROUTES.ACT_GESTION}}">
+            <i class="material-icons">add</i> Ajouter un organisme
+          </button>
+        </div>
+
+        <!-- FORMULAIRE -->
+        <div class="sirc-block-p2 mb-2">
+          <form [formGroup]="filtresForm" (ngSubmit)="rechercher(true)">
+            <div class="row">
+              <div class="sirc-fc-md-2">
+                <label class="sirc-label">Région</label>
+                <mat-select class="sirc-field" formControlName="departement.region.id" 
+                  (selectionChange)="changeFiltreRegion()">
+                  <mat-option [value]="null" title=""></mat-option>
+                  <mat-option *ngFor="let reg of regionsDeptFiltre" [value]="reg.id" title="{{reg.intitule}}">
+                    {{reg.intitule}}
+                  </mat-option>
+                </mat-select>
+              </div> 
+              <div class="sirc-fc-md-2">
+                <label class="sirc-label">Départements</label>
+                <mat-select class="sirc-field" formControlName="departement.id">
+                  <mat-option [value]="null" title=""></mat-option>
+                  <mat-option *ngFor="let dept of selectedRegion?.departements"  [value]="dept.id" title="{{dept.intitule}}">
+                    {{dept.intitule}}
+                  </mat-option>
+                </mat-select>
+              </div> 
+            </div>
+            <div class="buttons-container">
+              <button *ngIf="!loadingListe" type="button" class="btn-sirc-o btn-small no-outline"
+                (click)="prepareForm()">Réinitialiser les filtres</button>
+              <button *ngIf="!loadingListe" type="submit" class="btn-sirc btn-icon-small" title="Rechercher">
+                <i class="material-icons">search</i> Rechercher
+              </button>
+              <mat-progress-bar mode="indeterminate" *ngIf="loadingListe"></mat-progress-bar>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="mb-2">
+        <h2 class="mb-2">Liste des organismes</h2>
+        <div class="table-responsive" *appSircLoader="loadingListe">
+          <table class="table sirc-table">
+            <thead>
+              <tr>
+                <th><div class="sortable" (click)="triColonne('departement.region.intitule')">
+                  <span>Région</span><i class="material-icons">{{getSortIconName('departement.region.intitule')}}</i>
+                </div></th>
+                <th><div class="sortable" (click)="triColonne('departement.intitule')">
+                  <span>Département</span><i class="material-icons">{{getSortIconName('departement.intitule')}}</i>
+                </div></th>
+                <th><div class="sortable" (click)="triColonne('nomCourt')">
+                  <span>Organisme</span><i class="material-icons">{{getSortIconName('nomCourt')}}</i>
+                </div></th>
+                <th class="actions"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let org of organismes;let i = index; let odd = odd;" [ngClass]="{odd: odd}">
+                <td>{{org.departement.region.intitule}}</td>
+                <td>{{org.departement.intitule}}</td>
+                <td>{{org.nomCourt}} - {{org.nom}}</td>
+                <td class="td-btns">
+                  <i class="material-icons is-btn-small primary" title="Modifier l'organisme" (click)="modifOrganisme(org)">edit</i>
+                  <i class="material-icons is-btn-small danger" title="Supprimer l'organisme" (click)="supprOrganisme(org)">delete</i>
+                </td>
+              </tr>
+              <tr *ngIf="!organismes || organismes.length === 0" class="no-result">
+                <td [colSpan]="4">Aucune donnée ne correspond aux termes de recherche spécifiés.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <app-pager [pager]="searchRequestItem.pager"
+            [inactif]="filtresForm.invalid || loadingListe"
+            (navigateCallback)="rechercher()"></app-pager>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,121 @@
+<app-fil-ariane [filAriane]="filAriane" [accueilVisible]="true"></app-fil-ariane>
+<a class="d-none download-link" #downloadLink></a>
+
+<div class="sirc-page-body row">
+  <div class="col mt-md-0">
+    <h1 class="mb-0">Comptes utilisateurs</h1>
+    
+    <div *appSircLoader="loading">
+      <div class="sirc-filter-container">
+        <div class="buttons-container-header">
+          <button class="btn-sirc-o btn-icon-small no-outline" 
+            title="Ajouter un compte" (click)="ajoutCompte()">
+            <i class="material-icons">add</i> Ajouter un compte
+          </button>
+        </div>
+        
+        <!-- FORMULAIRE -->
+        <div class="sirc-block-p2 mb-2">
+          <form [formGroup]="filtresForm" (ngSubmit)="rechercher(true)">
+            <div class="row">
+              <div class="sirc-fc-md-2">
+                <label class="sirc-label">Identité</label>
+                <input class="sirc-field" type="text" formControlName="identite" 
+                  [ngClass]="{'error' : hasError(identite)}" placeholder="Prénom, nom, ou les deux">
+                <div class="sirc-errors-container" *ngIf="hasError(identite)">
+                  <label class="sirc-info error" *ngIf="!!(identite?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+                </div>
+              </div>
+              <div class="sirc-fc-md-2">
+                <label class="sirc-label">Identifiant</label>
+                <input class="sirc-field" type="text" formControlName="identifiant" 
+                  [ngClass]="{'error' : hasError(identifiant)}" placeholder="Identifiant du compte">
+                <div class="sirc-errors-container" *ngIf="hasError(identifiant)">
+                  <label class="sirc-info error" *ngIf="!!(identifiant?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+                </div>
+              </div> 
+          
+              <div class="sirc-fc-md-2">
+                <label class="sirc-label">Profil</label>
+                <mat-select class="sirc-field" formControlName="profil.id">
+                  <mat-option [value]="null" title=""></mat-option>
+                  <mat-option *ngFor="let prf of profils" [value]="prf.id" title="{{prf.intitule}} ">
+                    {{prf.intitule}}
+                  </mat-option>
+                </mat-select>
+              </div> 
+              <div class="sirc-fc-md-2">
+                <label class="sirc-label">Organisme</label>
+                <mat-select class="sirc-field" formControlName="organisme.id">
+                  <mat-option [value]="null" title=""></mat-option>
+                  <mat-option *ngFor="let org of organismes"  [value]="org.id" title="{{org.nomCourt}} - {{org.nom}}">
+                    {{org.nomCourt}} - {{org.nom}} 
+                  </mat-option>
+                </mat-select>
+              </div> 
+            </div>
+            <div class="buttons-container">
+              <button *ngIf="!loadingListe" type="button" class="btn-sirc-o btn-small no-outline"
+                (click)="filtresForm.reset()">Réinitialiser les filtres</button>
+              <button *ngIf="!loadingListe" type="submit" class="btn-sirc btn-icon-small" title="Rechercher">
+                <i class="material-icons">search</i> Rechercher
+              </button>
+              <mat-progress-bar mode="indeterminate" *ngIf="loadingListe"></mat-progress-bar>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="mb-2">
+        <h2 class="mb-2">Liste des comptes utilisateurs</h2>
+        <div class="table-responsive" *appSircLoader="loadingListe">
+          <table class="table sirc-table">
+            <thead>
+              <tr>
+                <th><div class="sortable" (click)="triColonne('identite')">
+                  <span>Nom et prénom</span><i class="material-icons">{{getSortIconName('identite')}}</i>
+                </div></th>
+                <th><div class="sortable" (click)="triColonne('identifiant')">
+                  <span>Identifiant</span><i class="material-icons">{{getSortIconName('identifiant')}}</i>
+                </div></th>
+                <th><div class="sortable" (click)="triColonne('profil.intitule')">
+                  <span>Profil</span><i class="material-icons">{{getSortIconName('profil.intitule')}}</i>
+                </div></th>
+                <th><div class="sortable" (click)="triColonne('organisme.nomCourt')">
+                  <span>Organisme</span><i class="material-icons">{{getSortIconName('organisme.nomCourt')}}</i>
+                </div></th>
+                <th class="actions"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let usr of comptes;let i = index; let odd = odd;" [ngClass]="{odd: odd}">
+                <td>{{usr.nom}} {{usr.prenom}}</td>
+                <td>{{usr.identifiant}}</td>
+                <td>{{usr?.profil?.intitule}}</td>
+                <td>{{usr?.organisme?.nom}}</td>
+                <td class="td-btns">
+                  <i class="material-icons is-btn-small primary" title="Modifier le compte" (click)="modifCompte(usr)">edit</i>
+                  <i class="material-icons is-btn-small danger" title="Supprimer le compte" 
+                    [ngClass]="{'inactif': compteIsCurrentUser(usr)}" (click)="supprCompte(usr)">delete</i>
+                </td>
+              </tr>
+              <tr *ngIf="!comptes || comptes.length === 0" class="no-result">
+                <td [colSpan]="5">Aucune donnée ne correspond aux termes de recherche spécifiés.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <app-pager [pager]="searchRequestItem.pager"
+            [inactif]="filtresForm.invalid || loadingListe"
+            (navigateCallback)="rechercher()"></app-pager>
+        <div class="buttons-container-footer">
+          <mat-progress-bar mode="indeterminate" *ngIf="isExporting"></mat-progress-bar>
+          <button class="btn-sirc btn-icon-small" *ngIf="!isExporting"
+            title="Exporter les données" (click)="exporter()" [disabled]="loadingListe">
+            <i class="material-icons">archive</i> Exporter
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

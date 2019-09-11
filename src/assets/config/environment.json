@@ -1,0 +1,33 @@
+{
+    "titleWebSite": {
+        "suffix" : " | IntraRC",
+        "default" : "IntraRC - Outil de gestion des ruptures conventionnelles individuelles"
+    },
+    "socleBaseUrl": "http://localhost:8080/api",
+    "jsonConverterConfig": {
+        "operationMode": 0
+    },
+    "oauth2_oidc": {
+        "issuer": "https://intrarc.integration.imc-fr.com/identification/oidc",
+        "redirectUri": "/accueil",
+        "clientId": "sirc-intra-front",
+        "scope": "openid profile email offline_access",  
+        "showDebugInformation": true
+    },
+    "verrou": {
+    	"duree": 10,
+    	"refreshInterval": 300000
+   	},
+    "birt": {
+        "birtBaseUrl": "https://intrarc.integration.imc-fr.com/rapports/frameset?",
+        "rapports": {
+            "ACCORD_EXPRES": "courrierAccordExpres.rptdesign",
+            "ACCUSE_RECEPTION" : "courrierAccuseDeReception.rptdesign",
+            "ATTESTATION_HOMOLOGATION" : "courrierAttestationDHomologation.rptdesign",
+            "AVIS_IRRECEVABILITE": "courrierAvisIrrecevabilite.rptdesign",
+            "COURRIER_REFUS":  "courrierDeRefus.rptdesign",
+            "COURRIER_TRANSFERT": "courrierDeTransfert.rptdesign",
+            "SYNTHESE": "syntheseDemande.rptdesign"
+        }
+    }
+}

@@ -1,0 +1,27 @@
+<app-fil-ariane [filAriane]="filAriane" [accueilVisible]="true"></app-fil-ariane>
+
+<div class="sirc-page-body row" *appSircLoader="mainLoading">
+  <div class="ed-menu-container col-12 col-md-4">
+    <div class="ed-menu pr-1 sirc-block">
+        <p class="bold">Sommaire :</p>
+        <app-menu-arborescent [article]="mainArticle"></app-menu-arborescent>
+    </div>
+  </div>
+
+  <div class="ed-article-container col mt-2 mt-md-0" >
+    <div class="ed-article" *appSircLoader="articleLoading">
+      <h1 class="ed-article-titre mb-2">{{article?.titre}}</h1>
+
+      <div class="ed-article-content sirc-block mb-2">
+        <div *ngIf="article?.afficherSommaire && article?.enfants?.length > 0" class="ed-article-enfants">
+          <p class="bold">Rubriques :</p>
+          <div class="ed-article-enfants-content">
+            <app-menu-arborescent [article]="article"></app-menu-arborescent>
+            <hr *ngIf="article?.contenu !== undefined"/>
+          </div>
+        </div>
+        <div *ngIf="article?.contenu !== undefined" class="ed-article-content mb-2 pt-1" [innerHTML]="article?.contenu"></div>
+      </div>
+    </div>
+  </div>
+</div>

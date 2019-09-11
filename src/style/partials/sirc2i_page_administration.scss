@@ -1,0 +1,167 @@
+/** Organismes **/
+.org-notif-radio {
+    height: 48px;
+}
+.org-liste-enf {
+    cursor: default;
+    .org-liste-enf-item {
+        .menu-arbo-top-org {
+            &:hover{
+                background: $sirc-blue1-op;
+            }
+            border-bottom: 2px solid $sirc-grayl;
+            padding: 0.75rem;
+        }
+        div.menu-arbo-org {
+            @extend .d-flex, .align-items-center;
+            &:hover{
+                background: $sirc-blue1-op;
+            }
+            &.lvl1 { padding-left: 1rem !important }
+            &.lvl2 { padding-left: 3rem !important }
+            &.lvl3 { padding-left: 5rem !important }
+            &.lvl4 { padding-left: 7rem !important }
+            &.lvl5 { padding-left: 9rem !important }
+            
+            font-size: $font-size-small;
+            border-bottom: 1px solid $sirc-grayl;
+            padding: 0.5rem;
+            i {
+                margin-right: 5px;
+                font-size: $font-size-scale;
+            }
+        }
+    }  
+}
+.org-liste-sign {
+    .org-liste-sign-item {
+        border-bottom: 2px solid $sirc-grayl;
+        .sign-item-star {
+            i.empty-star:hover {
+                color: $success;
+            }
+            i.full-star{
+                cursor: default !important;
+            }
+        }
+        .sign-item-img {
+            background: $white;
+            border-radius: 0.5rem;
+            >img {
+                width: 100%;
+            }
+        }
+        .sign-item-nom {
+            @extend .italic;
+            font-size: $font-size-scale;
+        }
+
+    }
+}
+image-cropper {
+    max-width: 256px;
+}
+
+/** Jours chômés **/
+tr {
+    &.jc-inactif {
+        color: $sirc-grayml;
+    }
+    td.jc-nom {
+        i.jc-systeme-icon {
+            font-size: $font-size-base;
+            margin-right: 10px;
+        }
+    }
+}
+
+
+/** Régions et Départements **/
+.liste-arbo {
+    .liste-arbo-items-container {
+        .liste-arbo-item {
+            border-bottom: 1px solid $sirc-graym;
+            
+            .liste-arbo-item-lvl1 {
+                @extend .bold;
+                &:hover {
+                    background: $sirc-grayml;
+                }
+                background: $sirc-grayl;
+                padding: 0.5rem;
+                font-size: $font-size-scale;
+                color: $sirc-graydd;
+
+                .arbo-item-lvl1-btns {
+                    @extend .d-flex, .align-items-center, .justify-content-end;
+                    >*{
+                        margin-left: 5px;
+                    }
+                }
+            }
+            .liste-arbo-items-container-lvl2 {
+                .liste-arbo-item-lvl2 {
+                    &:hover {
+                        background: $sirc-grayll;
+                    }
+                    &:last-child {
+                        margin-bottom: 1rem;
+                        border: none;
+                    }
+                    font-size: $font-size-scale;
+                    padding: 0.5rem;
+                    border-bottom: 1px solid $sirc-grayl;
+
+                    .arbo-item-lvl2-btns {
+                        @extend .d-flex, .align-items-center, .justify-content-end;
+                        >*{
+                            margin-left: 5px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/** Message info */
+app-message-information {
+    div.messageinfo-item {
+        padding: 0.5rem;
+        mat-radio-button {
+            &.mi-info {
+                div.mat-radio-outer-circle { border-color: $primary !important; }
+                div.mat-radio-inner-circle { background-color: $primary !important; }
+            }
+            &.mi-warn {
+                div.mat-radio-outer-circle { border-color: $warning !important; }
+                div.mat-radio-inner-circle { background-color: $warning !important; }
+            }
+            &.mi-alert {
+                div.mat-radio-outer-circle { border-color: $danger !important; }
+                div.mat-radio-inner-circle { background-color: $danger !important; }
+            }
+        }
+        // Quill
+        quill-editor {
+            .ql-container {
+                min-height: 200px;
+            }
+            &.error {
+                border: 2px solid $danger;
+            }
+        }
+        .ql-snow .ql-tooltip[data-mode=link]::before,
+        .ql-snow .ql-tooltip::before { 
+            content: "Lien URL :" !important;
+        }
+        .ql-snow .ql-tooltip a.ql-action::after { content: 'Enregistrer' !important; }
+        .ql-snow .ql-tooltip a.ql-remove::before { content: 'Effacer' !important; }
+        
+    }
+    &:not(:last-child) {
+        div.messageinfo-item {
+            border-bottom: 2px solid $sirc-grayl;
+        }
+    }
+}

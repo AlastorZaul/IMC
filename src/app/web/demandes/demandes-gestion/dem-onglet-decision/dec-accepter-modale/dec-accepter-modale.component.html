@@ -1,0 +1,30 @@
+<div class="sirc-modale-titre-container">
+  <h3>Type d'accord</h3>
+</div>
+
+<div class="sirc-modale-content-container">
+  <div class="row">
+      <div class="sirc-fc-lg">
+        <label class="sirc-label warning" *ngIf="isFormulaireInvalid">
+          Attention: vous vous apprêtez à prendre une décision d'acceptation pour 
+          une demande contenant des alertes. Si vous souhaitez prendre connaissance
+          de ces alertes avant de poursuivre, veuillez fermer la fenêtre et ouvrir les étapes "oranges"</label>
+      </div>
+    </div>
+  <div class="row">
+    <div class="sirc-fc-lg">
+        <label class="sirc-label"></label>
+        <mat-radio-group class="sirc-radio-group">
+          <mat-radio-button class="mi-info" [value]="STATUT.STT_ACCIM_CODE" (click)="demandeImplicite()" checked>Implicite</mat-radio-button>
+          <mat-radio-button class="mi-warn" [value]="STATUT.STT_ACCE_CODE" (click)="demandeExpres()">Exprès</mat-radio-button>
+        </mat-radio-group>
+      </div>
+  </div>
+</div> 
+
+<div class="sirc-modale-boutons-container">
+  <button type="button" class="btn-sirc btn-small col-12 col-sm-5" type="button"
+    (click)="close()">Annuler</button>
+  <button type="button" class="btn-sirc-success btn-small col-12 col-sm-5" type="button"
+  (click)="save()" cdkFocusInitial>Valider</button>
+</div>

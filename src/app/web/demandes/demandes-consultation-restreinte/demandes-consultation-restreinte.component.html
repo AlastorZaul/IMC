@@ -1,0 +1,101 @@
+<div class="sirc-modale-titre-container">
+  <h3>Consultation restreinte de la demande - #{{demande?.numero}}</h3>
+</div>
+
+<div class="sirc-modale-content-container" >
+  <div class="row" *appSircLoader="loading">
+    <div class="sirc-fc-lg">
+      <label class="sirc-label-titre">Employeur</label>
+    </div>
+    <!-- INFORMATIONS Employeur -->
+    <div class="sirc-fc-md-2 ">
+      <label class="sirc-label">{{(demande?.employeur?.siret)? 'Siret' : 'Urssaf'}}</label>
+      <span class="sirc-field" type="text">{{demande?.employeur?.siret}} {{demande?.employeur?.urssaf}}</span>
+    </div>
+
+    <div class="sirc-fc-md-2 ">
+      <label class="sirc-label">Raison sociale</label>
+      <span class="sirc-field" type="text">{{demande?.employeur?.raisonSociale}}</span>
+    </div>
+    <div class="sirc-fc-lg block-ligne-border"></div>
+    <div class="sirc-fc-lg">
+      <label class="sirc-label-titre">Salarié(e)</label>
+    </div>
+    <!-- INFORMATIONS Salarié -->
+    <div class="sirc-fc-md-2 ">
+      <label class="sirc-label">Salarié(e)</label>
+      <span class="sirc-field" type="text">{{demande?.salarie?.nom}} {{demande?.salarie?.prenom}}</span>
+    </div>
+    <div class="sirc-fc-lg block-ligne-border"></div>
+    <div class="sirc-fc-lg">
+        <label class="sirc-label-titre">La demande</label>
+      </div>
+    <!-- INFORMATIONS Demande 1 -->
+    <div class="sirc-fc-sm-2 ">
+      <label class="sirc-label">Numéro</label>
+      <span class="sirc-field" type="text">{{demande?.numero}}</span>
+    </div>
+
+    <div class="sirc-fc-sm-2 ">
+      <label class="sirc-label">Organisme de réception</label>
+      <span class="sirc-field" type="text">{{demande?.organismeReception?.nomCourt}}</span>
+    </div>
+
+    <div class="sirc-fc-sm-2 ">
+      <label class="sirc-label">Organisme d'attribution</label>
+      <span class="sirc-field" type="text">{{demande?.organismeAttribution?.nomCourt}}</span>
+    </div>
+
+    <!-- INFORMATIONS Demande 2 -->
+    <div class="sirc-fc-sm-2 ">
+      <label class="sirc-label">Date de décision</label>
+      <span class="sirc-field" type="text">{{demande.dateDecision | date: 'dd/MM/yyyy'}}</span>
+    </div>
+
+    <div class="sirc-fc-sm-2 ">
+      <label class="sirc-label">Décision</label>
+      <span class="sirc-field" class="bold" 
+      [ngClass]="{'isRecevable': isRecevable(demande?.statut?.code), 'isIrrecevable': isIrrecevable(demande?.statut?.code), 'accordee': isAccordee(demande?.statut?.code)}" 
+      type="text">{{demande?.statut?.intitule}}</span>
+    </div>
+
+    <div class="sirc-fc-sm-2 ">
+      <label class="sirc-label">Etape</label>
+      <span class="sirc-field" class="bold" 
+      [ngClass]="{'ainstruire': isAInstruire(demande?.etape?.code), 'instruits': isInstruite(demande?.etape?.code), 'clos': isCloture(demande?.etape?.code)}" 
+      type="text">{{demande?.etape?.intitule}}</span>
+    </div>
+
+    <!-- INFORMATIONS Demande 3 -->
+    <div class="sirc-fc-sm-2 ">
+      <label class="sirc-label">Demande télétransmise</label>
+      <span class="sirc-field" type="text">{{!!(demande?.dateTeletransmission) | booleanPipe}}</span>
+    </div>
+    <div class="sirc-fc-sm-2 " *ngIf="demande.dateTeletransmission">
+      <label class="sirc-label">Date de télétransmission</label>
+      <span class="sirc-field" type="text">{{demande?.dateTeletransmission | date: 'dd/MM/yyyy'}}</span>
+    </div>
+
+    <div class="sirc-fc-sm-2 ">
+      <label class="sirc-label">Date de réception</label>
+      <span class="sirc-field" type="text">{{demande?.dateReception | date: 'dd/MM/yyyy'}}</span>
+    </div>
+
+    <!-- INFORMATIONS Demande 4 -->
+    <div class="sirc-fc-sm-2 ">
+      <label class="sirc-label">Date de fin du délai d'instruction</label>
+      <span class="sirc-field" type="text">{{demande?.dateFinDelaiInstruction | date: 'dd/MM/yyyy'}}</span>
+    </div>
+    <div class="sirc-fc-sm-2 ">
+      <label class="sirc-label">Date envisagée de la rupture du contrat de travail</label>
+      <span class="sirc-field" type="text">{{demande?.dateEnvisageeRupture | date: 'dd/MM/yyyy'}}</span>
+    </div>
+  </div>
+</div>
+
+<div class="sirc-modale-boutons-container">
+  <button type="button" class="btn-sirc-o btn-small col-12 col-sm-3"
+    (click)="close()">Fermer</button>
+  <button type="button" class="btn-sirc-o btn-small col-12 col-sm-3"
+  (click)="telechargerSynthese()">Générer le document de synthèse</button>
+</div>

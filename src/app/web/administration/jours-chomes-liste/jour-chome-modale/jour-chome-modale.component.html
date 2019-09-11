@@ -1,0 +1,63 @@
+<div class="sirc-modale-titre-container" [ngSwitch]="createMode">
+  <h3 *ngSwitchCase="true">Ajouter un jour chômé</h3>
+  <h3 *ngSwitchCase="false">Modifier un jour chômé</h3>
+</div>
+
+<form [formGroup]="modeleForm" (ngSubmit)="save()">
+<div class="sirc-modale-content-container">
+  <div class="row">
+    <div class="sirc-fc-lg">
+      <label class="sirc-label">Intitulé</label>
+      <input class="sirc-field" type="text" formControlName="intitule"
+        [ngClass]="{'error' : hasError(intitule)}" placeholder="Intitulé du jour chômé">
+      <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(intitule)}">
+        <label class="sirc-info error" *ngIf="!!(intitule?.errors?.required)">Ce champ est obligatoire</label>
+        <label class="sirc-info error" *ngIf="!!(intitule?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="sirc-fc-md">
+      <label class="sirc-label">Mois</label>
+      <mat-select class="sirc-field" formControlName="mois" 
+          [ngClass]="{'error' : hasError(mois)}" (selectionChange)="updateMaxJourSelonMois(mois.value)">
+        <mat-option *ngFor="let m of listeMois" [value]="m.valeur" title="{{ m.nom }}">
+          {{ m.nom }}
+        </mat-option>
+      </mat-select>
+      <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(mois)}">
+        <label class="sirc-info error" *ngIf="!!(mois?.errors?.required)">Ce champ est obligatoire</label>
+      </div>
+    </div>
+    <div class="sirc-fc-sm">
+      <label class="sirc-label">Jour</label>
+      <input class="sirc-field" type="text" formControlName="jour" min="1" max="maxNbJours" step="1" type="number"
+        [ngClass]="{'error' : hasError(jour)}" placeholder="0 à {{maxNbJours}}">
+      <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(jour)}">
+        <label class="sirc-info error" *ngIf="!!(jour?.errors?.required)">Ce champ est obligatoire</label>
+        <label class="sirc-info error" *ngIf="!!(jour?.errors?.pattern)">La valeur doit être un nombre valide</label>
+        <label class="sirc-info error" *ngIf="!!(jour?.errors?.min)">Valeur minimale : 1</label>
+        <label class="sirc-info error" *ngIf="!!(jour?.errors?.max)">Valeur maximale : {{maxNbJours}}</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+      <div class="sirc-fc-fill">
+          <mat-checkbox class="sirc-field" formControlName="national" [labelPosition]="'after'">Jour chômé national ?</mat-checkbox>
+      </div> 
+      <div class="sirc-fc-fill">
+          <mat-checkbox class="sirc-field" formControlName="actif" [labelPosition]="'after'">Actif ?</mat-checkbox>
+      </div> 
+  </div>
+</div>
+
+<div class="sirc-modale-boutons-container">
+  <button *ngIf="!submitting" type="button" class="btn-sirc-o btn-small col-12 col-sm-5"
+    (click)="close()">Annuler</button>
+  <button *ngIf="!submitting" type="submit" class="btn-sirc-success btn-small col-12 col-sm-5"
+    cdkFocusInitial>Enregistrer</button>
+  <mat-progress-bar mode="indeterminate" *ngIf="submitting"></mat-progress-bar>
+</div>
+</form>

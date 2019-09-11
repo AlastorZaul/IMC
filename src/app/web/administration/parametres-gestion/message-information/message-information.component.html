@@ -1,0 +1,57 @@
+<div class="messageinfo-item mb-1 mt-1" [formGroup]="messageInfoFormGroup">
+  <div class="row">
+    <div class="sirc-fc-fill">
+      <h4 class="mb-1">{{titreMessage}}</h4>
+    </div>
+    <div class="sirc-fc-sm-nocol justify-content-end">
+      <label class="sirc-label">Afficher le message ?</label>
+      <mat-radio-group class="sirc-radio-group" formControlName="visible" (change)="visibilityChange()">
+        <mat-radio-button [value]="false">Non</mat-radio-button>
+        <mat-radio-button [value]="true">Oui</mat-radio-button>
+      </mat-radio-group>
+    </div>
+  </div>
+  <div class="p-1" *ngIf="visible.value">
+    <div class="row">
+      <div class="sirc-fc-fill">
+        <label class="sirc-label">Titre</label>
+        <input class="sirc-field" type="text" formControlName="titre"
+        [ngClass]="{'error' : hasError(titre)}" placeholder="Titre"/>
+        <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(titre)}">
+          <label class="sirc-info error" *ngIf="!!(titre?.errors?.required)">Ce champ est obligatoire</label>
+          <label class="sirc-info error" *ngIf="!!(titre?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+        </div>
+      </div>
+      <div class="sirc-fc-sm">
+        <label class="sirc-label">Date de publication</label>
+        <div class="sirc-date-field-container">
+          <input class="sirc-field" [ngClass]="{'error' : hasError(datePublication)}" 
+            [matDatepicker]="picker" formControlName="datePublication" [readonly]="true"/>
+          <mat-datepicker-toggle [for]="picker" ></mat-datepicker-toggle>
+          <mat-datepicker #picker ></mat-datepicker>
+        </div>
+        <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(datePublication)}">
+          <label class="sirc-info error" *ngIf="!!(datePublication?.errors?.required)">Ce champ est obligatoire</label>
+        </div>
+      </div>
+      <div class="sirc-fc-md">
+        <label class="sirc-label">Type du message</label>
+        <mat-radio-group class="sirc-radio-group" formControlName="importance">
+          <mat-radio-button class="mi-info" [value]="MESSAGE_IMPORTANCE.INFO">Information</mat-radio-button>
+          <mat-radio-button class="mi-warn" [value]="MESSAGE_IMPORTANCE.AVERTISSEMENT">Avertissement</mat-radio-button>
+          <mat-radio-button class="mi-alert" [value]="MESSAGE_IMPORTANCE.ALERTE">Alerte</mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+    <div class="row">
+      <div class="sirc-fc-lg">
+        <label class="sirc-label">Contenu</label>
+        <quill-editor [modules]="editor_modules" formControlName="contenu" 
+         [ngClass]="{'error' : hasError(contenu)}"></quill-editor>
+        <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(contenu)}">
+          <label class="sirc-info error" *ngIf="!!(contenu?.errors?.required)">Ce champ est obligatoire</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,345 @@
+
+.sirc-block {
+    @extend .p-1;
+    border: 2px solid $sirc-grayl;
+    border-radius: 12px;
+    background-color: $white;
+}
+.sirc-title-block {
+    border: 1px solid $sirc-blue1;
+    background-color: $sirc-blue1;
+    margin-top: 2rem;
+    padding: 1rem !important;
+    >.row .search-title {
+        color: white;
+        font-family: "Segoe UI","Helvetica Neue","Noto Color Emoji";
+    }
+    >.row .filter-icon {
+        color: white;
+    }
+}
+
+.sirc-block-p2 {
+    @extend .p-1, .p-sm-2, .sirc-block;
+}
+.sirc-block-recherche-p2 {
+    @extend .p-1, .sirc-block;
+    border-radius: initial;
+}
+.bold{
+    font-weight: bold;
+}
+.italic {
+    font-style: italic;
+}
+.block-ligne-border {
+    border-top: 1px outset $sirc-grayml !important;
+}
+.border-gray {
+    border: 1px solid $sirc-graymd;
+}
+.cursor-default { cursor: default; }
+.cursor-pointer { cursor: pointer; }
+.white {
+    color: $white;
+}
+.primary {
+    color: $primary;
+    &:hover {
+        color: $sirc-blue3;
+    }
+}
+.success {
+    color: $success;
+    &:hover {
+        color: $sirc-green2;
+    }
+}
+.danger {
+    color: $danger;
+    &:hover {
+        color: $sirc-red2;
+    }
+}
+.hidden {
+    visibility: hidden;
+}
+.inactif {
+    opacity: 0.25;
+}
+.version {
+    font-size: $font-size-tiny;
+}
+
+// ############# LIENS ###############
+.fake-link {
+    color: $primary;
+    &:hover {
+        color: $secondary;
+        cursor: pointer;
+        text-decoration: underline;
+    }
+}
+
+
+// ############# BUTTON ###############
+.btn {
+    white-space: normal;
+    @media (max-width: map-get($grid-breakpoints, "sm")) {
+        width: 100%;
+        padding: $btn-padding-y-sm $btn-padding-x-sm;
+    }
+}
+.btn-sirc { @extend .btn, .btn-primary; }
+.btn-sirc-o { @extend .btn, .btn-outline-primary; }
+.btn-sirc-danger { @extend .btn, .btn-danger; }
+.btn-sirc-danger-o { @extend .btn, .btn-outline-danger; }
+.btn-sirc-success { @extend .btn, .btn-success; }
+.btn-sirc-success-o { @extend .btn, .btn-outline-success; }
+
+.btn-icon {
+    @extend .d-inline-flex, .justify-content-center, .align-items-center;
+    padding: 0.25rem;
+    padding-right: 1rem;
+    >i {
+        font-size: 3rem;
+    }
+}
+.btn-small {
+    padding: 0.5rem 1rem;
+    font-size: $font-size-scale;
+    border-width: 1px;
+}
+.btn-icon-small {
+    @extend .btn-small, .d-inline-flex, .justify-content-center, .align-items-center;
+    >i {
+        margin-right: 5px;
+    }
+}
+button.no-outline {
+    border: none !important;
+}
+
+i.is-btn {
+    cursor: pointer;
+    font-size: $font-size-icon-btn;
+}
+i.is-btn-small {
+    cursor: pointer;
+    font-size: $font-size-icon-btn-sm;
+}
+i.is-btn-big {
+    cursor: pointer;
+    font-size: $font-size-icon-btn-big;
+}
+
+
+
+/*** FORMULAIRES **/
+.mb-025 {
+    margin-bottom: 0.25rem !important;
+}
+.mb-05 {
+    margin-bottom: 0.5rem !important;
+}
+div.sirc-fc-lg {
+    @extend .col-12, .col-md-12, .mb-025, .d-flex, .flex-column;
+}
+div.sirc-fc-lg-2 {
+    @extend .col-12, .col-md-12, .mb-2, .d-flex, .flex-column;
+}
+div.sirc-fc-md {
+    @extend .col-12, .col-md-6, .mb-025, .d-flex, .flex-column;
+}
+div.sirc-fc-md-2 {
+    @extend .col-12, .col-md-6, .mb-2, .d-flex, .flex-column;
+}
+div.sirc-fc-sm {
+    @extend .col-12, .col-md-4, .mb-025, .d-flex, .flex-column;
+}
+div.sirc-fc-sm-2 {
+    @extend .col-12, .col-md-4, .mb-2, .d-flex, .flex-column;
+}
+div.sirc-fc-sm-nocol {
+    @extend .col-12, .col-md-4, .mb-025, .d-flex;
+}
+div.sirc-fc-xs {
+    @extend .col-6, .col-md-4, .mb-025, .d-flex, .flex-column;
+}
+div.sirc-fc-xs-2 {
+    @extend .col-6, .col-md-4, .mb-2, .d-flex, .flex-column;
+}
+div.sirc-fc-xsm {
+    @extend .col-4, .col-md-2, .mb-025, .d-flex, .flex-column;
+}
+div.sirc-fc-xsm-2 {
+    @extend .col-4, .col-md-2, .mb-2, .d-flex, .flex-column;
+}
+div.sirc-fc-fill {
+    @extend .col-12, .col-md, .mb-025, .d-flex, .flex-column;
+}
+div.sirc-fc-fill-2 {
+    @extend .col-12, .col-md, .mb-2, .d-flex, .flex-column;
+}
+label.sirc-label {
+    &.error {
+        color: $danger;
+    }
+    &.warn {
+        color: $warning;
+    }
+    font-size: $font-size-scale;
+    font-weight: bold;
+    letter-spacing: -0.25px;
+    &>span.optionnel{
+        font-style: italic;
+        font-weight: 300;
+    }
+}
+label.sirc-label-titre {
+    &.error {
+        color: $danger;
+    }
+    &.warn {
+        color: $warning;
+    }
+    color: black;
+    font-size: $font-size-medium;
+    font-weight: 900;
+    letter-spacing: -0.25px;
+    &>span.optionnel{
+        font-style: italic;
+        font-weight: 300;
+    }
+}
+label.sirc-info {
+    &.error {
+        color: $danger;
+        margin-top: 0rem !important;
+        margin-bottom: 0rem !important;
+    }
+    &.warn {
+        color: $warning;
+        margin-top: 0rem !important;
+        margin-bottom: 0rem !important;
+        font-weight: bold;
+    }
+    color: $sirc-graymd;
+    font-size: $font-size-tiny;
+    margin-top: 0.5rem;
+}
+div.sirc-date-field-container {
+    @extend .d-flex, .align-items-center;
+    .sirc-field { cursor: default; }
+    mat-datepicker-toggle { color: $primary; }
+}
+input.sirc-field, select.sirc-field, textarea.sirc-field,
+mat-select.sirc-field {
+    &::placeholder { 
+        opacity: 1;	
+        color: $sirc-graym;
+        font-size: $font-size-scale;
+    }
+    &:hover {
+        border: 2px solid $sirc-graym;
+    }
+    &:focus {
+        border: 2px solid $primary;
+        outline: none;
+    }
+    &.error {
+        border: 2px solid $danger;
+    }
+    &.warn {
+        border: 2px solid $warning;
+    }
+    color: $sirc-grayd;
+    border: 2px solid $sirc-grayml;
+    border-radius: 4px;
+    height: 48px;
+    min-width: 100px;
+    max-width: 100%;
+    padding: 10px;
+
+    &.mat-select {
+        font-family: $font-family-sans-serif;
+        &.mat-select-disabled{
+            background: $sirc-grayl;
+        }
+    }
+    &.mat-select-value {
+        color: unset;
+    }
+}
+textarea.sirc-field {
+    height: 200px !important;
+}
+.sirc-errors-container {
+    @extend .d-flex, .flex-column;
+    min-height: 30px;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
+.sirc-label, .sirc-info, .sirc-field {
+    &.disabled, &:disabled {
+        opacity: 0.65;
+        background: none;
+    }
+}
+.ng-invalid.ng-touched:not(form):not(div),
+.ng-invalid.ng-dirty:not(form):not(div){
+    border: 2px solid $danger;
+}
+.warn.ng-touched:not(.error):not(form):not(div),
+.warn.ng-dirty:not(.error):not(form):not(div){
+    border: 2px solid $warning;
+}
+
+span.mat-checkbox-label {
+    font-size: $font-size-scale;
+    color: $sirc-grayd
+}
+
+tr.no-result, div.no-result {
+    text-align: center;
+    font-style: italic;
+    >td, >p {
+        padding: 2rem;
+    }
+}
+
+
+// SURCHARGE MATERIAL
+div.mat-tab-label,
+div.mat-tab-label-content {
+    color: $sirc-graydd;
+}
+div.hidden {
+    mat-ink-bar {
+        visibility: hidden !important;
+    }
+}
+.mat-checkbox-layout {
+    white-space: normal !important;
+}
+.mat-tooltip {
+    max-width: 300px !important;
+    background: $sirc-blue3 !important;
+    font-size: $font-size-scale !important;
+}
+.mat-tab-label {
+    opacity: 1 !important;
+    .mat-tab-label-content {
+        .sirc-mat-tab-titre {
+            &.error {
+                color: $danger;
+            }
+        }
+    }
+}
+mat-tab-group.mat-tab-group.error {
+    mat-ink-bar {
+        background-color: $danger !important;
+    }
+}

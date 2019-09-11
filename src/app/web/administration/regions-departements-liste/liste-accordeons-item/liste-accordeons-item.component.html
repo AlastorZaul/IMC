@@ -1,0 +1,24 @@
+<div class="liste-arbo-item" *ngIf="region">
+  <div class="liste-arbo-item-lvl1 row no-gutters">
+    <div class="col">{{region.intitule}} ({{region.code}})</div>
+    <div class="arbo-item-lvl1-btns col-12 col-sm-4 d-wrap">
+      <i class="material-icons is-btn-small primary" title="Ajouter un département" (click)="ajoutDepartementDansRegion()" >add</i>
+      <i class="material-icons is-btn-small primary" title="Modifier la région" (click)="modifRegion()">edit</i>
+      <i class="material-icons is-btn-small danger" title="Supprimer la région" (click)="supprRegion()">delete</i>
+      <i class="material-icons is-btn-small primary" title="Ouvrir l'accordéon" 
+        (click)="changeAccordeon(true)" *ngIf="!isOuvert() && region?.departements?.length > 0">expand_more</i>
+      <i class="material-icons is-btn-small primary" title="Ferme l'accordéon" 
+        (click)="changeAccordeon(false)" *ngIf="isOuvert() && region?.departements?.length > 0">expand_less</i>
+    </div>
+  </div>
+  <div class="liste-arbo-items-container-lvl2" *ngIf="isOuvert()">
+    <div class="liste-arbo-item-lvl2 row no-gutters" *ngFor="let dpt of region?.departements;let i=index">
+      <div class="col-6 col-sm-3 order-1">{{dpt.intitule}} ({{dpt.code}})</div>
+      <div class="col-12 col-sm-7 order-3 order-sm-2">{{dpt.organismeReferent?.nom}}</div>
+      <div class="arbo-item-lvl2-btns col-6 col-sm-2 order-2 order-sm-3 d-wrap">
+        <i class="material-icons is-btn-small primary" title="Modifier le département" (click)="modifDepartement(dpt, i)">edit</i>
+        <i class="material-icons is-btn-small danger" title="Supprimer le département" (click)="supprDepartement(dpt, i)">delete</i>
+      </div>
+    </div>
+  </div>
+</div>

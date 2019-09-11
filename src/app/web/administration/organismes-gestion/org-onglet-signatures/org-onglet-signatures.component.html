@@ -1,0 +1,36 @@
+<div class="mt-3" formArrayName="signatures">
+  <h4>Liste des signatures</h4>
+  <p>Permet d'associer des images de signature aux organismes afin de pouvoir les utiliser lors de la génération des courriers officiels.</p>
+  <div class="buttons-container-header">
+    <button class="btn-sirc btn-icon-small" 
+      title="{{(signatures?.controls?.length > 4)? 'Vous ne pouvez associer que 5 signatures maximum' : 'Ajouter une signature'}}" 
+      type="button" (click)="ajoutSignature()" [disabled]="signatures?.controls?.length > 4">
+      <i class="material-icons">add</i> Ajouter une signature
+    </button>
+  </div>
+  <div class="org-liste-sign row no-gutters pt-1 mb-2">
+    <div class="org-liste-sign-item sirc-fc-lg pb-1 col-12" *ngFor="let sign of signatures.controls; let i=index">
+      <div class="d-flex flex-wrap align-items-center">
+        <div class="sign-item-star col-1 order-3 order-sm-1" [ngSwitch]="sign.value.principale">
+          <i class="material-icons is-btn-small full-star success" *ngSwitchCase="true">star</i>
+          <i class="material-icons is-btn-small empty-star" (click)="setSignPrincipale(sign.value, i)" *ngSwitchCase="false">star_border</i>
+        </div>
+        <div class="sign-item-img col-12 col-sm-3 order-1 order-sm-2">
+          <img [src]="sign.value.contenu" />
+        </div>
+        <div class="sign-item-nom col order-2 order-sm-3">
+          {{sign.value.nom}}
+        </div>
+        <div class="col-3 order-3 order-sm-4 d-flex justify-content-end">
+          <i class="material-icons is-btn-small primary" title="Modifier la signatue" (click)="modifSignature(sign.value, i)">edit</i>
+          <i class="material-icons is-btn-small danger" title="Supprimer la signatue" 
+            (click)="supprSignature(sign.value, i)">delete</i>
+        </div>
+      </div>
+      <!--<input type="text" [formControlName]="i">-->
+    </div>
+    <div *ngIf="!signatures.controls || signatures.controls.length === 0" class="col-12 no-result">
+      <p>Aucune signature actuellement associée à cet organisme.</p>
+    </div>
+  </div>
+</div>

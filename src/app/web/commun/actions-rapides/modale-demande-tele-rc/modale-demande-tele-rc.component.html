@@ -1,0 +1,72 @@
+<div class="sirc-modale-titre-container">
+  <h3>Récupérer une demande depuis TéléRC</h3>
+</div>
+
+<form [formGroup]="modeleForm" (ngSubmit)="recuperer()">
+<div class="sirc-modale-content-container">
+  <div class="row">
+    <div class="sirc-fc-lg">
+      <div class="d-flex align-items-top">
+        <label class="sirc-label">Numéro de la demande</label>
+        <i class="ml-1 material-icons is-btn-small primary" 
+          matTooltip="Le numéro de demande TéléRC doit respecter le format suivant : [Année sur 4 chiffres][Mois sur 2 chiffres][Compteur allant de 000000 à 999999]P"
+        >help</i>
+      </div>
+      <input class="sirc-field" type="text" formControlName="numero"
+        [ngClass]="{'error' : hasError(numero)}" placeholder="Ex: 201901000012P">
+      <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(numero)}">
+        <label class="sirc-info error" *ngIf="!!(numero?.errors?.required)">Ce champ est obligatoire</label>
+        <label class="sirc-info error" *ngIf="!!(numero?.errors?.isNumeroDemandePublic)">Votre saisie ne respecte pas le format des numéros de demande</label>
+        <label class="sirc-info error" *ngIf="!!(numero?.errors?.maxlength)">Taille maximale : 13 caractères</label>
+      </div>
+    </div>
+  </div>
+  <!-- DEMANDE INTRARC -->
+  <div class="row p-1 no-gutters ar-bloc-demande" *ngIf="demandeIntraRc">
+    <p class="col-12 italic">La demande portant ce numéro a déjà été rapatriée sur IntraRC.</p>
+    <div class="col-12">
+      <div class="row">
+        <div class="sirc-fc-sm">
+          <label class="sirc-label">Numéro</label>
+          <span class="sirc-field" type="text">{{demandeIntraRc.numero}}</span>
+        </div>
+        <div class="sirc-fc-sm">
+          <label class="sirc-label">Organisme d'attribution</label>
+          <span class="sirc-field" type="text">{{demandeIntraRc.organismeAttribution?.nomCourt}}</span>
+        </div>
+        <div class="sirc-fc-sm">
+          <label class="sirc-label">Etape</label>
+          <span class="sirc-field" type="text">{{demandeIntraRc?.etape?.intitule}}</span>
+        </div>
+        <div class="sirc-fc-sm">
+          <label class="sirc-label">Siret / Urssaf de l'employeur</label>
+          <span class="sirc-field" type="text">{{demandeIntraRc?.employeur?.siret}} {{demandeIntraRc?.employeur?.urssaf}}</span>
+        </div>
+        <div class="sirc-fc-md-2">
+          <label class="sirc-label">Salarié(e)</label>
+          <span class="sirc-field" type="text">{{demandeIntraRc?.salarie?.nom}} {{demandeIntraRc?.salarie?.prenom}}</span>
+        </div> 
+      </div>
+    </div>
+    <div class="col-12 d-flex justify-content-center">
+      <button *ngIf="!openingDemande" type="button" class="btn-sirc btn-small col-12 col-sm-3"
+        (click)="ouvrirDemandeIntraRc()">Ouvrir la demande</button>
+    </div>
+  </div>
+  <!-- DEMANDE TELERC --> 
+  <div class="row p-1 no-gutters ar-bloc-load-demande" *ngIf="recupEnCours">
+    <p class="col-12 italic">Récupération de la demande en cours.</p>
+    <div class="col-12">
+        <app-loader></app-loader>
+    </div>
+  </div>
+</div>
+
+<div class="sirc-modale-boutons-container">
+  <button *ngIf="!submitting" type="button" class="btn-sirc-o btn-small col-12 col-sm-5"
+    (click)="close()">Sortir</button>
+  <button *ngIf="!submitting" type="submit" class="btn-sirc btn-small col-12 col-sm-5"
+    cdkFocusInitial>Récupérer</button>
+  <mat-progress-bar mode="indeterminate" *ngIf="submitting"></mat-progress-bar>
+</div>
+</form>

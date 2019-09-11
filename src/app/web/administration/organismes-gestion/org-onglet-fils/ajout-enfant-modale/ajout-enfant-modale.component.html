@@ -1,0 +1,32 @@
+<div class="sirc-modale-titre-container">
+  <h3>Lier un organisme</h3>
+</div>
+
+<form [formGroup]="modeleForm" (ngSubmit)="save()">
+<div class="sirc-modale-content-container">
+  <div class="row mb-1">
+    <div class="sirc-fc-fill" *ngIf="listeOrganismes?.length > 0">
+      <label class="sirc-label">Organisme</label>
+      <mat-select class="sirc-field" formControlName="organisme" [ngClass]="{'error' : hasError(organisme)}">
+        <mat-option *ngFor="let org of listeOrganismes" [value]="org" title="{{ org.nomCourt }} - {{ org.nom }} ">
+          {{ org.nomCourt }} - {{ org.nom }} 
+        </mat-option>
+      </mat-select>
+      <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(organisme)}">
+        <label class="sirc-info error" *ngIf="!!(organisme?.errors?.required)">Ce champ est obligatoire</label>
+      </div>
+    </div>
+    <div class="col no-result" *ngIf="listeOrganismes === undefined || listeOrganismes.length === 0">
+      Aucun organisme disponible à la sélection.
+    </div>
+  </div>
+</div>
+
+<div class="sirc-modale-boutons-container">
+  <button *ngIf="!submitting" type="button" class="btn-sirc-o btn-small col-12 col-sm-5"
+    (click)="close()">Annuler</button>
+  <button *ngIf="!submitting" type="submit" class="btn-sirc-success btn-small col-12 col-sm-5"
+    cdkFocusInitial>Ajouter</button>
+  <mat-progress-bar mode="indeterminate" *ngIf="submitting"></mat-progress-bar>
+</div>
+</form>

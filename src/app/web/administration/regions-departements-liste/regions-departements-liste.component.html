@@ -1,0 +1,39 @@
+<app-fil-ariane [filAriane]="filAriane" [accueilVisible]="true"></app-fil-ariane>
+
+<div class="sirc-page-body row">
+  <div class="col mt-md-0">
+    <h1 class="mb-2">Régions et départements</h1>
+    
+    <div class="sirc-block-p2 mb-2" *appSircLoader="loading">
+      <div class="liste-arbo">
+        <div class="buttons-container-header">
+          <button class="btn-sirc-o btn-icon-small no-outline" 
+            title="Ajouter une région" (click)="ajoutRegion()">
+            <i class="material-icons">add</i> Ajouter une région
+          </button>
+          <button class="btn-sirc-o btn-icon-small no-outline mt-1 mt-sm-0" 
+            title="Ajouter un département" (click)="ajoutDepartement()">
+            <i class="material-icons">add</i> Ajouter un département
+          </button>
+          <div class="expand-btns">
+            <i class="material-icons is-btn-small success" title="Ouvrir tous les accordéons" 
+              (click)="changeTousAccordeons(true)">add_circle</i>
+            <i class="material-icons is-btn-small danger" title="Fermer tous les accordéons" 
+              (click)="changeTousAccordeons(false)">remove_circle</i>
+            <i class="material-icons is-btn-small primary" title="Rafraichir la liste" 
+              (click)="rechargeListe()">refresh</i>
+          </div>
+        </div>
+
+        <div class="liste-arbo-items-container">
+            <app-liste-accordeons-item *ngFor="let reg of this.regions;let i=index" 
+              [region]="reg" [regions]="regions" [organismes]="organismes"
+              [parentChangeAccordeon]="parentChangeAccordeon"
+              (rechargeListe)="rechargeListe()"
+              ></app-liste-accordeons-item>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

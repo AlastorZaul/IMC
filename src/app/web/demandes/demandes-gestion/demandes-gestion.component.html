@@ -1,0 +1,138 @@
+<app-fil-ariane [filAriane]="filAriane" [accueilVisible]="true"></app-fil-ariane>
+
+<div class="sirc-page-body row">
+  <div class="col mt-md-0" [ngClass]="{'error' : hasGroupError(modelForm)}">
+    <app-loader *ngIf="loading"></app-loader>
+    <div [ngClass]="{hidden: loading}">
+      
+      <!-- FORMULAIRE -->
+      <form [formGroup]="modelForm" (ngSubmit)="save()" (keydown.enter)="$event.target.tagName == 'TEXTAREA'">
+        <!-- ENCART PRINCIPAL -->
+        <app-dem-onglet-commun></app-dem-onglet-commun>
+        <div class="row no-gutters d-flex justify-content-center sirc-demande-navbar">
+          <div class="col-12 navbar-info mb-2">
+            Vous pouvez naviguer entre les onglets sans perdre les informations saisies.
+          </div>
+          <div class="col-12 navbar-boutons-container mb-2">
+            <div class="row no-gutters d-flex justify-content-center">
+              <div class="navbar-item mr-3">
+                <button class="btn-circle-icone btn-sirc-o gestion" (click)="navigateToOnglet(0)" type="button"
+                  [ngClass]="{'active': isOngletAffiche(0), 'warn': !loading && demOngletGestionComp?.isOngletWarn(),
+                  'invalid': !loading && demOngletGestionComp?.isOngletInvalid(), 'valid': !loading && demOngletGestionComp?.isOngletValid()}"
+                ><i class="material-icons">list</i></button>
+                <label>Gestion</label>
+              </div>
+              <div class="navbar-item">
+                <button class="btn-circle btn-sirc-o"  (click)="navigateToOnglet(1)" type="button"
+                  [ngClass]="{'active': isOngletAffiche(1), 'invalid': !loading && demOngletEmployeurComp?.isOngletInvalid(), 
+                  'valid': !loading && demOngletEmployeurComp?.isOngletValid()}">1</button>
+                <label>Employeur</label>
+              </div>
+              <span class="navbar-item-separator"></span>
+              <div class="navbar-item">
+                <button class="btn-circle btn-sirc-o" (click)="navigateToOnglet(2)" type="button"
+                [ngClass]="{'active': isOngletAffiche(2), 
+                'invalid': !loading && ((!isConsultEditMode() && demOngletSalarieComp?.isOngletInvalid()) || (isConsultEditMode() && demOngletSalarieComp?.isOngletConsultInvalid())), 
+                'valid': !loading && demOngletSalarieComp?.isOngletValid()}">2</button>
+                <label>Salarié(e)</label>
+              </div>
+              <span class="navbar-item-separator"></span>
+              <div class="navbar-item">
+                <button class="btn-circle btn-sirc-o" (click)="navigateToOnglet(3)" type="button"
+                [ngClass]="{'active': isOngletAffiche(3), 'warn': !loading && demOngletCalculComp?.isOngletWarn(),
+                'invalid': !loading && demOngletCalculComp?.isOngletInvalid(), 'valid': !loading && demOngletCalculComp?.isOngletValid()}">3</button>
+                <label>Calcul de l'indemnité</label>
+              </div>
+              <span class="navbar-item-separator"></span>
+              <div class="navbar-item">
+                <button class="btn-circle btn-sirc-o" (click)="navigateToOnglet(4)" type="button"
+                [ngClass]="{'active': isOngletAffiche(4), 'warn': !loading && demOngletCalendrierComp?.isOngletWarn(),
+                'invalid': !loading && demOngletCalendrierComp?.isOngletInvalid(), 
+                'valid': !loading && demOngletCalendrierComp?.isOngletValid()}">4</button>
+                <label>Calendrier</label>
+              </div>
+              <span class="navbar-item-separator"></span>
+              <div class="navbar-item">
+                <button class="btn-circle btn-sirc-o" (click)="navigateToOnglet(5)" type="button"
+                [ngClass]="{'active': isOngletAffiche(5), 'warn': !loading && demOngletControleComp?.isOngletWarn(),
+                'valid': !loading && demOngletControleComp?.isOngletValid()}">5</button>
+                <label>Contrôle</label>
+              </div>
+              <span class="navbar-item-separator"></span>
+              <div class="navbar-item">
+                <button class="btn-circle btn-sirc-o" (click)="navigateToOnglet(6)" type="button"
+                [ngClass]="{'active': isOngletAffiche(6), 'invalid': !loading && demOngletDecisionComp?.isOngletInvalid(),
+                'valid': !loading && demOngletDecisionComp?.isOngletValid()}">6</button>
+                <label>Décision</label>
+              </div>
+              <div class="navbar-item ml-3">
+                <button class="btn-circle-icone btn-sirc-o courrier" (click)="navigateToOnglet(7)" type="button" 
+                [ngClass]="{'active': isOngletAffiche(7), 'invalid': !loading && demOngletCourrierComp?.isOngletInvalid(), 
+                'valid': !loading && demOngletCourrierComp?.isOngletValid()}">
+                  <i class="material-icons">mail</i>
+                </button>
+                <label>Courrier</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ONGLETS DE LA DEMANDE -->
+        <app-dem-onglet-gestion 
+          [parentSendSubmitted]="parentSendSubmitted" 
+          (checkParentFormValidity)="isFormulaireInvalid()" [parentSendIsFormulaireInvalid]="parentSendIsFormulaireInvalid"
+          [parentIsConsultation]="parentIsConsultation"
+          [demOngletControleComp]="demOngletControleComp" [demOngletEmployeurComp]="demOngletEmployeurComp"
+          [demOngletCourrierComp]="demOngletCourrierComp"
+          [listeOrganismesAccessibles]="listeOrganismesAccessibles" [listeSignature]="listeSignature"
+          [listeJourChomesOrganisme]="listeJourChomesOrganisme"
+          (saveTransfert)="saveTransfert()"
+          [ngClass]="{'d-none': !isOngletAffiche(0)}"></app-dem-onglet-gestion>
+        <app-dem-onglet-employeur 
+          [parentSendSubmitted]="parentSendSubmitted" [listePays]="listePays" [listeAPE]="listeAPE"
+          [parentIsConsultation]="parentIsConsultation"
+          [demOngletControleComp]="demOngletControleComp"
+          [ngClass]="{'d-none': !isOngletAffiche(1)}"></app-dem-onglet-employeur> 
+        <app-dem-onglet-salarie 
+          [parentSendSubmitted]="parentSendSubmitted" [listePays]="listePays" [listeQualification]="listeQualification"
+          [ngClass]="{'d-none': !isOngletAffiche(2)}"></app-dem-onglet-salarie> 
+        <app-dem-onglet-calcul 
+          [parentSendSubmitted]="parentSendSubmitted"
+          [ngClass]="{'d-none': !isOngletAffiche(3)}"></app-dem-onglet-calcul> 
+        <app-dem-onglet-calendrier 
+          [parentSendSubmitted]="parentSendSubmitted" [parentIsConsultation]="parentIsConsultation"
+          [listeQualiteAssistantEmployeur]="listeQualiteAssistantEmployeur"
+          [listeQualiteAssistantSalarie]="listeQualiteAssistantSalarie" [listeJourChomesOrganisme]="listeJourChomesOrganisme" 
+          [ngClass]="{'d-none': !isOngletAffiche(4)}"></app-dem-onglet-calendrier>
+        <app-dem-onglet-controle [parentIsConsultation]="parentIsConsultation"
+          [ngClass]="{'d-none': !isOngletAffiche(5)}"></app-dem-onglet-controle>
+        <app-dem-onglet-decision 
+          [parentSendSubmitted]="parentSendSubmitted" [parentIsConsultation]="parentIsConsultation"
+          [parentSendIsFormulaireInvalid]="parentSendIsFormulaireInvalid" [parentSendIsFormulaireWarn]="parentSendIsFormulaireWarn"
+          (formulaireInvalidEvent)="isFormulaireInvalid()" (formulaireWarnEvent)="isFormulaireWarn()"
+          [listeMotifsRefus]="listeMotifsRefus" [listeStatut]="listeStatut" 
+          [listeMotifsIrrecevable]="listeMotifsIrrecevable" [demOngletCourrierComp]="demOngletCourrierComp"
+          [ngClass]="{'d-none': !isOngletAffiche(6)}"></app-dem-onglet-decision> 
+        <app-dem-onglet-courrier 
+          [parentSendSubmitted]="parentSendSubmitted" 
+          (checkParentFormValidity)="isFormulaireInvalid()" [parentSendIsFormulaireInvalid]="parentSendIsFormulaireInvalid"
+          [parentIsConsultation]="parentIsConsultation"
+          [listeTypeCourrier]="listeTypeCourrier" [listeSignature]="listeSignature" [listeStatut]="listeStatut"
+          (saveImprimerEnvoyer)="saveImprimerEnvoyer()"
+          [ngClass]="{'d-none': !isOngletAffiche(7)}"></app-dem-onglet-courrier>
+          
+        <!-- ZONE DES BOUTONS -->
+        <div class="sirc-modale-boutons-container">
+          <button *ngIf="!submitting && (isConsultMode() || !modelForm.dirty)" type="button" class="btn-sirc-o btn-small"
+            (click)="sortir()">Sortir</button>
+          <button *ngIf="!isConsultMode() && !submitting && (modelForm.dirty)" type="button" class="btn-sirc-o btn-small"
+            (click)="sortir()">Annuler</button>
+          <button *ngIf="(!isConsultMode() || isConsultEditMode()) && !submitting" type="submit" class="btn-sirc-success btn-small"
+            cdkFocusInitial>Enregistrer</button>
+          <mat-progress-bar mode="indeterminate" *ngIf="submitting"></mat-progress-bar>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,110 @@
+@import "fonts-icomoon-variables";
+
+@font-face {
+  font-family: '#{$icomoon-font-family}';
+  src:
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?ooroqg') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?ooroqg') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?ooroqg##{$icomoon-font-family}') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+i.sirc-icon {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: '#{$icomoon-font-family}' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ico-upload .path1 {
+  &:before {
+    content: $ico-upload-path1;  
+    color: rgb(97, 80, 255);
+  }
+}
+.ico-upload .path2 {
+  &:before {
+    content: $ico-upload-path2;  
+    margin-left: -0.7724609375em;  
+    color: rgb(97, 80, 255);
+  }
+}
+.ico-upload .path3 {
+  &:before {
+    content: $ico-upload-path3;  
+    margin-left: -0.7724609375em;  
+    color: rgb(0, 232, 4);
+  }
+}
+
+.ico-creer-demande .path1 {
+  &:before {
+    content: $ico-creer-demande-path1;  
+    color: rgb(97, 80, 255);
+  }
+}
+.ico-creer-demande .path2 {
+  &:before {
+    content: $ico-creer-demande-path2;  
+    margin-left: -0.8916015625em;  
+    color: rgb(97, 80, 255);
+  }
+}
+.ico-creer-demande .path3 {
+  &:before {
+    content: $ico-creer-demande-path3;  
+    margin-left: -0.8916015625em;  
+    color: rgb(97, 80, 255);
+  }
+}
+.ico-creer-demande .path4 {
+  &:before {
+    content: $ico-creer-demande-path4;  
+    margin-left: -0.8916015625em;  
+    color: rgb(97, 80, 255);
+  }
+}
+.ico-creer-demande .path5 {
+  &:before {
+    content: $ico-creer-demande-path5;  
+    margin-left: -0.8916015625em;  
+    color: rgb(97, 80, 255);
+  }
+}
+.ico-creer-demande .path6 {
+  &:before {
+    content: $ico-creer-demande-path6;  
+    margin-left: -0.8916015625em;  
+    color: rgb(97, 80, 255);
+  }
+}
+.ico-creer-demande .path7 {
+  &:before {
+    content: $ico-creer-demande-path7;  
+    margin-left: -0.8916015625em;  
+    color: rgb(0, 232, 4);
+  }
+}
+.ico-ouvrir-demande .path1 {
+  &:before {
+    content: $ico-ouvrir-demande-path1;  
+    color: rgb(97, 80, 255);
+  }
+}
+.ico-ouvrir-demande .path2 {
+  &:before {
+    content: $ico-ouvrir-demande-path2;  
+    margin-left: -0.9375em;  
+    color: rgb(0, 232, 4);
+  }
+}
+

@@ -1,0 +1,274 @@
+<h3 class="mb-1">Employeur</h3>
+<div [formGroup]="employeur">
+  <div class="sirc-block-p2 mb-2">
+    <div class="row">
+      <div class="col">
+        <h4 class="mb-2">Identité de l'établissement</h4>
+        <!-- Informations 1 -->
+        <div class="row">
+          <div class="sirc-fc-sm">
+            <label class="sirc-label" [ngClass]="{'disabled' : employeurSiret?.disabled}">Identifiant de l'établissement</label>
+            <input class="sirc-field" type="text" formControlName="siret" placeholder="SIRET (14 chiffres)"
+              [ngClass]="{'error' : hasError(employeurSiret)}" (change)="siretChange()">
+            <mat-progress-bar mode="indeterminate" *ngIf="callingSirene"></mat-progress-bar>
+            <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(employeurSiret)}">
+              <label class="sirc-info error" *ngIf="!!(employeurSiret?.errors?.required)">Veuillez renseigner ce champ, ou le champ "Numéro de cotisant"</label>
+              <label class="sirc-info error" *ngIf="!!(employeurSiret?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+              <label class="sirc-info error" *ngIf="!!(employeurSiret?.errors?.isNumeroSiret)">Le siret renseigné ne respecte pas la clé Luhn</label>
+            </div>
+          </div>
+          <div class="col-2 d-flex align-items-start justify-content-center" *ngIf="!employeurSiret?.value && !employeurUrssaf?.value">
+            <label class="italic mb-0" >Ou, à défaut</label><i class="material-icons siret-arrow-icon">trending_flat</i>
+          </div>
+          <div class="sirc-fc-sm">
+            <label class="sirc-label" [ngClass]="{'disabled' : employeurUrssaf?.disabled}">Numéro de cotisant</label>
+            <input class="sirc-field" type="text" formControlName="urssaf" placeholder="ex: numéro URSSAF"
+            [ngClass]="{'error' : hasError(employeurUrssaf)}" (change)="urssafChange()">
+            <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(employeurUrssaf)}">
+              <label class="sirc-info error" *ngIf="!!(employeurUrssaf?.errors?.required)">Veuillez renseigner ce champ, ou le champ "Identifiant de l'établissement"</label>
+              <label class="sirc-info error" *ngIf="!!(employeurUrssaf?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <!-- Informations 2 -->
+          <div class="sirc-fc-md">
+            <label class="sirc-label">Nom ou raison sociale</label>
+            <input class="sirc-field" type="text" formControlName="raisonSociale" [ngClass]="{'error' : hasError(employeurRaisonSociale)}">
+            <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(employeurRaisonSociale)}">
+              <label class="sirc-info error" *ngIf="!!(employeurRaisonSociale?.errors?.required)">Ce champ est obligatoire</label>
+              <label class="sirc-info error" *ngIf="!!(employeurRaisonSociale?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+            </div>
+          </div>
+          <div class="sirc-fc-md">
+            <label class="sirc-label">Nom du signataire pour le compte de l'employeur</label>
+            <input class="sirc-field" type="text" formControlName="nomSignataire" [ngClass]="{'error' : hasError(employeurNomSignataire)}">
+            <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(employeurNomSignataire)}">
+              <label class="sirc-info error" *ngIf="!!(employeurNomSignataire?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+            </div>
+          </div>
+        </div>
+        <!-- Informations 3 -->
+        <div class="row">
+          <div class="sirc-fc-fill">
+            <label class="sirc-label">APE</label>
+            <mat-select class="sirc-field" formControlName="ape">
+              <mat-option [value]="null" title=""></mat-option>
+              <mat-option *ngFor="let ape of listeAPE" [value]="ape" title="{{ape.code}} - {{ape.intitule}}">
+                {{ape.code}} - {{ape.intitule}}
+              </mat-option>
+            </mat-select>
+            <div class="sirc-errors-container"><!-- Pour l'espacement du formulaire--></div>
+          </div> 
+          <div class="sirc-fc-xsm">
+            <label class="sirc-label">Effectif</label>
+            <input class="sirc-field" type="number" formControlName="effectif" [ngClass]="{'error' : hasError(employeurEffectif)}">
+            <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(employeurEffectif)}">
+              <label class="sirc-info error" *ngIf="!!(employeurEffectif?.errors?.pattern)">Numérique uniquement</label>
+            </div>
+          </div>
+        </div>
+        <!-- Informations 4 -->
+        <div class="row">
+          <div class="sirc-fc-md">
+            <label class="sirc-label">Courriel</label>
+            <input class="sirc-field" type="text" formControlName="courriel" [ngClass]="{'error' : hasError(employeurCourriel)}">
+            <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(employeurCourriel)}">
+              <label class="sirc-info error" *ngIf="!!(employeurCourriel?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+              <label class="sirc-info error" *ngIf="!!(employeurCourriel?.errors?.email)">L'adresse courriel renseignée n'est pas valide</label>
+            </div>
+          </div>
+          <div class="sirc-fc-sm">
+            <label class="sirc-label">Téléphone</label>
+            <input class="sirc-field" type="text" formControlName="telephone" [ngClass]="{'error' : hasError(employeurTelephone)}">
+            <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(employeurTelephone)}">
+              <label class="sirc-info error" *ngIf="!!(employeurTelephone?.errors?.maxlength)">Taille maximale : 20 caractères</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- adresse -->
+  <div class="sirc-block-p2 mb-2">
+    <div class="row">
+      <div class="col" [formGroup]="adresse">
+        <h4 class="mb-2">Adresse de l'établissement</h4>
+        <div class="row">
+          <div class="sirc-fc-md">
+            <label class="sirc-label">Saisissez le pays</label>
+            <mat-select class="sirc-field" [ngClass]="{'error' : hasError(adressePays)}"
+                        formControlName="pays" (selectionChange)="adressePaysChange()">
+              <mat-option *ngFor="let pays of listePays"  [value]="pays" title="{{pays.intitule}}">
+                {{pays.intitule}}
+              </mat-option>
+            </mat-select>
+            <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(adressePays)}">
+              <label class="sirc-info error" *ngIf="!!(adressePays?.errors?.required)">Ce champ est obligatoire</label>
+            </div>
+          </div>
+        </div> 
+        <div class="row" *ngIf="adressePays?.value">
+          <div class="sirc-fc-fill">
+            <label class="sirc-label">Rue</label>
+            <input class="sirc-field" type="text" formControlName="voie" [ngClass]="{'error' : hasError(adresseVoie)}">
+            <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(adresseVoie)}">
+              <label class="sirc-info error" *ngIf="!!(adresseVoie?.errors?.required)">Ce champ est obligatoire</label>
+              <label class="sirc-info error" *ngIf="!!(adresseVoie?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+            </div>
+          </div>
+          <div class="sirc-fc-sm">
+            <label class="sirc-label">Complément</label>
+            <input class="sirc-field" type="text" formControlName="complement" [ngClass]="{'error' : hasError(adresseComplement)}">
+            <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(adresseComplement)}">
+              <label class="sirc-info error" *ngIf="!!(adresseComplement?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="adressePays?.value">
+          <div class="sirc-fc-xsm" *ngIf="adressePays?.value?.code === CODE_PAYS.FRANCE">
+            <label class="sirc-label">Code postal</label>
+            <input class="sirc-field" type="text" placeholder="(ex: 33520)" formControlName="localisation"
+            [ngClass]="{'error' : hasError(adresseLocalisation)}"
+            [matAutocomplete]="locCodePostal" (input)="getAdresseLocalisationsByCode()" (focusout)="focusOutAdresseLocalisation()">
+            <mat-autocomplete #locCodePostal="matAutocomplete" (optionSelected)="selectedAdresseOption()" [displayWith]="displayValeurCodePostal" [panelWidth]="'unset'" >
+              <mat-option *ngFor="let localisation of filteredLocalisations | async" [value]="localisation" >
+                {{localisation?.commune}} ({{localisation?.codePostal}})
+              </mat-option>
+            </mat-autocomplete>
+            <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(adresseLocalisation)}">
+              <label class="sirc-info error" *ngIf="!!(adresseLocalisation?.errors?.required)">Ce champ est obligatoire</label>
+            </div>
+          </div>
+          <!-- Commune dans le cas du choix du pays === France -->
+          <div class="sirc-fc-md" *ngIf="adressePays?.value?.code === CODE_PAYS.FRANCE">
+            <label class="sirc-label">Commune</label>
+            <input class="sirc-field" type="text" placeholder="ex: BRUGES" formControlName="localisation"
+            [ngClass]="{'error' : hasError(adresseLocalisation)}"
+            [matAutocomplete]="locCommune" (input)="getAdresseLocalisationsByCommune()" (focusout)="focusOutAdresseLocalisation()">
+            <mat-autocomplete #locCommune="matAutocomplete" (optionSelected)="selectedAdresseOption()" [displayWith]="displayValeurCommune" [panelWidth]="'unset'" >
+              <mat-option *ngFor="let localisation of filteredLocalisations | async" [value]="localisation" >
+                {{localisation?.commune}} ({{localisation?.codePostal}})
+              </mat-option>
+            </mat-autocomplete>
+            <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(adresseLocalisation)}">
+              <label class="sirc-info error" *ngIf="!!(adresseLocalisation?.errors?.required)">Ce champ est obligatoire</label>
+            </div>
+          </div>
+          <!-- Commune dans le cas du choix d'un pays étranger -->
+          <div class="sirc-fc-md" *ngIf="adressePays?.value?.code !== CODE_PAYS.FRANCE">
+            <label class="sirc-label">Commune</label>
+            <input class="sirc-field" type="text" formControlName="infosEtranger"
+            [ngClass]="{'error' : hasError(adresseInfosEtranger)}">
+            <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(adresseInfosEtranger)}">
+              <label class="sirc-info error" *ngIf="!!(adresseInfosEtranger?.errors?.required)">Ce champ est obligatoire</label>
+              <label class="sirc-info error" *ngIf="!!(adresseInfosEtranger?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+            </div>
+          </div>
+          <div class="sirc-fc-xsm">
+            <label class="sirc-label">Boîte Postale</label>
+            <input class="sirc-field" type="text" formControlName="bp" [ngClass]="{'error' : hasError(adresseBp)}">
+            <label class="sirc-info error" *ngIf="!!(adresseBp?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- adresse correspondance -->
+  <div class="sirc-block-p2 mb-2">
+    <div class="row">
+      <div class="col">
+        <mat-checkbox class="sirc-field" #checkedAdrCorr [checked]="adresseCorrespondance?.value?.id" 
+          (change)="changeAdresseCorr($event.checked, checkedAdrCorr)" [disabled]="isConsultMode()">
+          <h4 class="ml-1 mb-0">Adresse différente pour les correspondances</h4>
+        </mat-checkbox>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col mt-2" [formGroup]="adresseCorrespondance" *ngIf="checkedAdrCorr?.checked">
+        <div class="row">
+          <div class="sirc-fc-md">
+            <label class="sirc-label">Saisissez le pays</label>
+            <mat-select class="sirc-field" [ngClass]="{'error' : hasError(adresseCorrespondancePays)}" 
+                        formControlName="pays" (selectionChange)="adresseCorrespondancePaysChange()">
+              <mat-option *ngFor="let pays of listePays"  [value]="pays" title="{{pays.intitule}}">
+                {{pays.intitule}}
+              </mat-option>
+            </mat-select>
+            <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(adresseCorrespondancePays)}">
+              <label class="sirc-info error" *ngIf="!!(adresseCorrespondancePays?.errors?.required)">Ce champ est obligatoire</label>
+            </div>
+          </div> 
+        </div>
+        <div class="row" *ngIf="adresseCorrespondancePays?.value">
+          <div class="sirc-fc-fill">
+            <label class="sirc-label">Rue</label>
+            <input class="sirc-field" type="text" [ngClass]="{'error' : hasError(adresseCorrespondanceVoie)}"
+                  formControlName="voie">
+            <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(adresseCorrespondanceVoie)}">
+              <label class="sirc-info error" *ngIf="!!(adresseCorrespondanceVoie?.errors?.required)">Ce champ est obligatoire</label>
+              <label class="sirc-info error" *ngIf="!!(adresseCorrespondanceVoie?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+            </div>
+          </div>
+          <div class="sirc-fc-sm">
+            <label class="sirc-label">Complément</label>
+            <input class="sirc-field" type="text" formControlName="complement" [ngClass]="{'error' : hasError(adresseCorrespondanceComplement)}">
+            <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(adresseCorrespondanceComplement)}">
+              <label class="sirc-info error" *ngIf="!!(adresseCorrespondanceComplement?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+            </div>
+            
+          </div>
+        </div>
+        <div class="row" *ngIf="adresseCorrespondancePays?.value">
+          <div class="sirc-fc-xsm" *ngIf="adresseCorrespondancePays?.value?.code === CODE_PAYS.FRANCE">
+            <label class="sirc-label">Code postal</label>
+            <input class="sirc-field" type="text" placeholder="(ex: 33520)" formControlName="localisation"
+            [ngClass]="{'error' : hasError(adresseCorrespondanceLocalisation)}"
+            [matAutocomplete]="locCodePostal" (input)="getAdresseCorrespondanceLocalisationsByCode()" (focusout)="focusOutAdresseCorrespondanceLocalisation()">
+            <mat-autocomplete #locCodePostal="matAutocomplete" (optionSelected)="selectedAdresseCorrespondanceOption()" [displayWith]="displayValeurCodePostal" [panelWidth]="'unset'" >
+              <mat-option *ngFor="let localisation of filteredLocalisations | async" [value]="localisation" >
+                {{localisation?.commune}} ({{localisation?.codePostal}})
+              </mat-option>
+            </mat-autocomplete>
+            <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(adresseCorrespondanceLocalisation)}">
+              <label class="sirc-info error" *ngIf="!!(adresseCorrespondanceLocalisation?.errors?.required)">Ce champ est obligatoire</label>
+            </div>
+          </div>
+          <!-- Commune dans le cas du choix du pays === France -->
+          <div class="sirc-fc-md" *ngIf="adresseCorrespondancePays?.value?.code === CODE_PAYS.FRANCE">
+            <label class="sirc-label">Commune</label>
+            <input class="sirc-field" type="text" placeholder="ex: BRUGES" formControlName="localisation"
+            [ngClass]="{'error' : hasError(adresseCorrespondanceLocalisation)}"
+            [matAutocomplete]="locCommune" (input)="getAdresseCorrespondanceLocalisationsByCommune()" (focusout)="focusOutAdresseCorrespondanceLocalisation()">
+            <mat-autocomplete #locCommune="matAutocomplete" (optionSelected)="selectedAdresseCorrespondanceOption()" [displayWith]="displayValeurCommune" [panelWidth]="'unset'" >
+              <mat-option *ngFor="let localisation of filteredLocalisations | async" [value]="localisation" >
+                {{localisation?.commune}} ({{localisation?.codePostal}})
+              </mat-option>
+            </mat-autocomplete>
+            <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(adresseCorrespondanceLocalisation)}">
+              <label class="sirc-info error" *ngIf="!!(adresseCorrespondanceLocalisation?.errors?.required)">Ce champ est obligatoire</label>
+            </div>
+          </div>
+          <!-- Commune dans le cas du choix d'un pays étranger -->
+          <div class="sirc-fc-md" *ngIf="adresseCorrespondancePays?.value?.code !== CODE_PAYS.FRANCE">
+            <label class="sirc-label">Commune</label>
+            <input class="sirc-field" type="text" formControlName="infosEtranger"
+            [ngClass]="{'error' : hasError(adresseCorrespondanceInfosEtranger)}">
+            <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(adresseCorrespondanceInfosEtranger)}">
+              <label class="sirc-info error" *ngIf="!!(adresseCorrespondanceInfosEtranger?.errors?.required)">Ce champ est obligatoire</label>
+            </div>
+          </div>
+          <div class="sirc-fc-xsm">
+            <label class="sirc-label">Boîte Postale</label>
+            <input class="sirc-field" type="text" formControlName="bp" [ngClass]="{'error' : hasError(adresseCorrespondanceBp)}">
+            <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(adresseCorrespondanceBp)}">
+              <label class="sirc-info error" *ngIf="!!(adresseCorrespondanceBp?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

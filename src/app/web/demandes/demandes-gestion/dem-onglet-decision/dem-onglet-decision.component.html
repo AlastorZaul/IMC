@@ -1,0 +1,95 @@
+<h3 class="mb-1">Décision</h3>
+<div class="sirc-block-p2 mb-2">
+  <div class="row">
+    <div class="col">
+      <h4 class="mb-1">Décision :     {{statut?.value?.intitule}}</h4>
+      <div class="row" *ngIf="!isConsultMode()">
+        <div class="sirc-fc-lg no-result" *ngIf="!id?.value">
+          <div class="warning bold mb-2">
+            Vous ne pouvez pas prendre de décision avant d'enregistrer au moins une première fois la demande.
+          </div>
+        </div>
+        <div class="sirc-fc-xsm" *ngIf="statut?.value?.code === STATUT.STT_REC_CODE && id?.value">
+          <button (click)="demandeAccepter()" class="btn-sirc-success-o btn-icon-small" type="button" title="Accepter">
+              Accepter
+          </button>
+        </div>
+        <div class="sirc-fc-xsm" *ngIf="statut?.value?.code === STATUT.STT_REC_CODE && id?.value">
+          <button (click)="demandeIrrecevable()" class="btn-sirc-danger-o btn-icon-small" type="button" title="Irrecevable">
+              Irrecevable
+          </button>
+        </div>
+        <div class="sirc-fc-xsm" *ngIf="statut?.value?.code === STATUT.STT_REC_CODE && id?.value">
+          <button (click)="demandeRefuser()" class="btn-sirc-danger-o btn-icon-small" type="button" title="Refuser">
+              Refuser
+          </button>
+        </div>
+        <div class="sirc-fc-sm" *ngIf="statut?.value?.code !== STATUT.STT_REC_CODE && id?.value">
+          <button (click)="demandeAnnuler()" class="btn-sirc-o btn-icon-small" type="button" title="Annuler">
+              Annuler la décision
+            </button>
+        </div>
+      </div>
+      <!-- Date de décision -->
+      <div class="row mt-2">
+        <div class="sirc-fc-sm">
+          <label class="sirc-label">Date de décision</label>
+          <div class="sirc-date-field-container">
+            <input class="sirc-field" [ngClass]="{'error' : hasError(dateDecision)}" 
+              [matDatepicker]="pickerDateDecision" formControlName="dateDecision" [readonly]="true"/>
+            <mat-datepicker-toggle [for]="pickerDateDecision"></mat-datepicker-toggle>
+            <mat-datepicker #pickerDateDecision ></mat-datepicker>
+            <i class="material-icons is-btn-small" (click)="supprimerDate(dateDecision)">close</i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Motifs  -->
+      <div class="row mt-2">
+        <div class="sirc-fc-lg" *ngIf="statut?.value?.code === STATUT.STT_IRR_CODE">
+          <label class="sirc-label">Motif(s) d'irrecevabilité et leur référence juridique (article du code du travail)</label>
+          <div class="sirc-fc-lg" >
+            <mat-checkbox class="sirc-field" formArrayName="motifsDecision" [disabled]="isConsultMode()"
+              *ngFor="let motif of listeMotifsIrrecevable; let i = index;" 
+              [checked]="isInArray(motif)" (change)="pushOrRemoveFromArray($event.checked, motif)">{{motif.intitule}}</mat-checkbox>
+            <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasErrorArray(motifsDecision)}">
+              <label class="sirc-info error" *ngIf="!!(motifsDecision?.errors?.required)">Au moins un motif d'irrecevabilité doit être sélectionné</label>
+            </div>
+          </div>
+        </div>
+        <div class="sirc-fc-lg" *ngIf="statut?.value?.code === STATUT.STT_REF_CODE">
+          <label class="sirc-label">Motif(s) de refus et leur référence juridique (article du code du travail)</label>
+          <div class="sirc-fc-lg" >
+            <mat-checkbox class="sirc-field" formArrayName="motifsDecision" [disabled]="isConsultMode()"
+              *ngFor="let motif of listeMotifsRefus; let i = index;"
+               [checked]="isInArray(motif)" (change)="pushOrRemoveFromArray($event.checked, motif)">{{motif.intitule}}</mat-checkbox>
+            <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasErrorArray(motifsDecision)}">
+              <label class="sirc-info error" *ngIf="!!(motifsDecision?.errors?.required)">Au moins un motif de refus doit être sélectionné</label>
+            </div>
+          </div>
+        </div>
+        <!-- Autres motifs - précision-->
+        <div class="sirc-fc-lg" *ngIf="statut?.value?.code === STATUT.STT_IRR_CODE || statut?.value?.code === STATUT.STT_REF_CODE">
+          <label class="sirc-label">Motif de refus/irrecevabilité "Autres" - précisions</label>
+          <textarea class="sirc-field" type="text" formControlName="decisionMotifAutre"></textarea>
+          <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasErrorArray(decisionMotifAutre)}">
+            <label class="sirc-info error" *ngIf="!!(decisionMotifAutre?.errors?.required)">Ce champ est obligatoire</label>
+            <label class="sirc-info error" *ngIf="!!(decisionMotifAutre?.errors?.maxlength)">Taille maximale : 10000 caractères</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Date d'impression -->
+      <div class="row mt-2">
+        <div class="sirc-fc-sm">
+          <label class="sirc-label">Date d'impression ou d'envoi du courrier de décision</label>
+          <div class="sirc-date-field-container">
+            <input class="sirc-field" [ngClass]="{'error' : hasError(dateImpression)}" 
+              [matDatepicker]="pickerDateImpression" formControlName="dateImpression" />
+            <mat-datepicker #pickerDateImpression ></mat-datepicker>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

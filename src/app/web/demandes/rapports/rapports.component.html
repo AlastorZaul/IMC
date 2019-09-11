@@ -1,0 +1,15 @@
+<app-fil-ariane [filAriane]="filAriane" [accueilVisible]="true"></app-fil-ariane>
+
+<div class="sirc-page-body row" *appSircLoader="loading">
+  <div class="col mt-2 mt-md-0" >
+    <h1 class="mb-2">Rapports</h1>
+    <div class="sirc-block-p2 mb-2" >
+      <div class="italic" *ngIf="messageInfo?.valeur !== undefined" [innerHTML]="messageInfo?.valeur"></div>
+      <div class="d-flex pt-2 pb-2 justify-content-center">
+        <button class="btn-sirc-o btn-icon" (click)="redirectPortail()">
+          <i class="material-icons">chevron_right</i> Accéder au portail décisionnel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

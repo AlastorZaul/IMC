@@ -1,0 +1,64 @@
+<div class="sirc-modale-titre-container" [ngSwitch]="isDemandesEtablissement">
+  <h3 *ngSwitchCase="true">Ruptures conventionnelles dans l'établissement</h3>
+  <h3 *ngSwitchCase="false">Ruptures conventionnelles dans l'entreprise</h3>
+</div>
+<a class="d-none download-link" #downloadLinkControle></a>
+
+<div class="sirc-modale-content-container">
+  <div class="table-responsive">
+    <table class="table sirc-table sirc-table-search-demande">
+      <thead>
+        <tr>
+          <th><div class="sortable">
+            <span>Organisme d'attribution</span>
+          </div></th>
+          <th><div class="sortable">
+            <span>Numéro</span>
+          </div></th>
+          <th><div class="sortable">
+            <span>SIRET/URSSAF</span>
+          </div></th>
+          <th><div class="sortable">
+            <span>Raison sociale</span>
+          </div></th>
+          <th><div class="sortable">
+            <span>Salarié(e)</span>
+          </div></th>
+          <th><div class="sortable">
+            <span>Etape</span>
+          </div></th>
+          <th><div class="sortable">
+            <span>Décision</span>
+          </div></th>
+          <th><div class="sortable">
+            <span>Date de réception</span>
+          </div></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let d of listeDemSimilaires;let i = index; let odd = odd;" [ngClass]="{odd: odd}">
+          <td>{{d?.organismeAttribution?.nomCourt}}</td>
+          <td>{{d?.numero}}</td>
+          <td>{{d?.employeur?.siret}} {{d?.employeur?.urssaf}}</td>
+          <td>{{d?.employeur?.raisonSociale}}</td>
+          <td>{{d?.salarie?.nom}} {{d?.salarie?.prenom}}</td>
+          <td class="bold" [ngClass]="{'ainstruire': isAInstruire(d?.etape?.code), 'instruits': isInstruite(d?.etape?.code), 'clos': isCloture(d?.etape?.code)}">{{d?.etape?.intitule}}</td>
+          <td class="bold" [ngClass]="{'isRecevable': isRecevable(d?.statut?.code), 'isIrrecevable': isIrrecevable(d?.statut?.code), 'accordee': isAccordee(d?.statut?.code)}">{{d?.statut?.intitule}}</td>
+          <td>{{d?.dateReception | date: 'dd/MM/yyyy'}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="sirc-modale-boutons-container">
+  <div class="col-12" *ngIf="isExporting">
+    <div class="row no-gutters d-flex justify-content-center">
+      <mat-progress-bar class="col-12" mode="indeterminate"></mat-progress-bar>
+      <div class="col-12 p-1 no-result">Récupération du fichier demandé en cours, veuillez patienter...</div>
+    </div>
+  </div>
+  <button type="button" title="Exporter les données" class="btn-sirc btn-icon-small" *ngIf="!isExporting"
+    (click)="export()"><i class="material-icons">archive</i> Exporter</button>
+  <button type="button" class="btn-sirc-o btn-small col-12 col-sm-2" *ngIf="!isExporting"
+    (click)="close()" cdkFocusInitial>Fermer</button>
+</div>

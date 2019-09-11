@@ -1,0 +1,209 @@
+// PAGE RECHERCHE - ACTIONS RAPIDES
+.rec-actions-rapides {
+    .ar-item-container {
+        .ar-icone {
+            text-align: center;
+            width: 75px;
+            &>i {
+                cursor: pointer;
+                font-size: $font-size-icon-btn-big;
+                &.sirc-icon.ico-creer-demande {
+                    font-size: 2.9rem;
+                    padding-left: 7px;
+                }
+                &.sirc-icon.ico-upload {
+                    font-size: 3.2rem;
+                }
+            }
+        }
+    }
+}
+
+// PAGE RECHERCHE - filtres + grille
+.col-filtres-employeur, .col-entretien-employeur {
+    border-right: 1px solid $sirc-grayml;
+}
+table.sirc-table-search-demande thead > tr th {
+    font-size: 0.85rem;
+}
+.ainstruire { color: $warning; }
+.instruits { color: $blue; }
+.clos { color: $sirc-grayd; }
+.accordee { color: $success; }
+.isRecevable { color: $warning; }
+.isIrrecevable { color: $danger; }
+.sirc-table-search-demande .clos { color: $sirc-graym; }
+.sirc-table-courrier-demande { text-align: center; }
+
+
+
+/////////// FORMULAIRE DEMANDE ///////////
+// GESTION DEMANDES - PAGE CALCUL 
+.sirc-block-calcul-automatique {
+    @extend .p-1;
+    border: 2px solid $success;
+    background-color: $white;
+    >.ar-item-desc {
+        @extend .italic;
+        font-size: $font-size-tiny;
+        margin-top: 0.5rem;
+    }
+}
+
+.premiers-mois-renum {
+    background-color: rgb(215, 240, 240);
+}
+
+//
+.inactif-input {
+    background-color: $sirc-grayml;
+}
+
+.rem-men-aut {
+    padding-left: 3rem;
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+
+.type-courrier {
+    background: $sirc-graymd;
+    border-radius: 4px;
+    color: white;
+    text-align: center;
+    font-weight: 600;
+}
+
+////// ZONE COMMUNE //////
+.commun-decision-container {
+    margin-bottom: -25px;
+    .decision-commun-block {
+        padding: 0.5rem;
+        border: 2px solid $sirc-grayl;
+        background-color: $white;
+        text-align: center;
+        .sirc-label {
+            margin-bottom: 0px !important;
+        }
+    }
+}
+.sirc-demande-navbar {
+    .navbar-info {
+        text-align: center;
+        font-style: italic;
+        font-size: $font-size-tiny;
+    }
+    .navbar-boutons-container {
+        .navbar-item-separator {
+            border-bottom: 4px solid $sirc-grayml;
+            width: 50px;
+            height: 25px;
+            &.valid {
+                border-color: $success;
+            }
+        }
+        div.navbar-item {
+            @extend .flex-column, .justify-content-center;
+            text-align: center;
+            width: 80px;
+            max-width: 80px;
+            >label {
+                display: block;
+                font-size: $font-size-small;
+                margin-top: 0.25rem;
+            }
+            button.btn-circle {
+                @extend  .btn;
+                border-color: $sirc-graymd;
+                color: $sirc-graymd;
+                &.gestion, &.courrier {
+                    background-color: $sirc-grayd;
+                    border-color: $sirc-grayd;
+                    color: $white;
+                }
+                &.valid {
+                    background-color: $success !important;
+                    border-color: $success;
+                    color: $white;
+                }
+                &.invalid, &.invalid.warn {
+                    background-color: $sirc-red2 !important;
+                    border-color: $sirc-red2;
+                    color: $white;
+                }
+                &.warn {
+                    background-color: $warning !important;
+                    border-color: $warning;
+                    color: $white;
+                }
+                &.active {
+                    background-color: $primary;
+                    border-color: $primary;
+                    color: $white !important;
+                    &:hover {
+                        background-color: $secondary !important;
+                        border-color: $secondary;
+                        color: $white !important;
+                    }
+                }
+                &:hover {
+                    background-color: $primary !important;
+                    border-color: $primary;
+                    color: $white !important;
+                }
+                padding: 0;
+                border-radius: 50%;
+                border-width: 2px;
+                width: 2.5rem;
+                height: 2.5rem;
+            }
+            button.btn-circle-icone {
+                @extend .btn-circle, .d-inline-flex, .justify-content-center, .align-items-center;
+            }
+        }
+    }
+}
+
+.accordee-border {
+    @extend .accordee;
+    border-color: $success !important;
+}
+.isRecevable-border {
+    @extend .isRecevable;
+    border-color: $warning !important;
+}
+.isIrrecevable-border {
+    @extend .isIrrecevable;
+    border-color: $danger !important;
+}
+
+.alert-courrier {
+    text-align: center;
+    color: $danger;
+}
+.cloture {
+    text-align: center;
+    color: $sirc-graydd;
+}
+
+////// ONGLET GESTION - MODALE TRANSFERT //////
+.alert-transfert {
+    text-align: center;
+}
+.warning {
+    color: $warning;
+}
+
+////// ONGLETS CALENDRIER ////
+.row.infos-entretien {
+    padding-top: 1.5rem;
+    border-top: 2px solid $sirc-grayml;
+}
+.row.separation-dates-controle {
+    border-left: 2px solid $sirc-grayml;
+}
+
+// ONGLET EMPLOYEUR 
+.siret-arrow-icon {
+    font-size: $font-size-icon-btn;
+    margin-left: 0.5rem;
+}

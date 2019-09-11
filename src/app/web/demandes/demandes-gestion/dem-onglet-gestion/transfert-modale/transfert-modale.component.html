@@ -1,0 +1,70 @@
+<div class="sirc-modale-titre-container">
+  <h3>Transférer la demande</h3>
+</div>
+
+<div class="sirc-modale-content-container">
+  <div *appSircLoader="loading">
+    <div [formGroup]="transfertFG">
+      <div class="row mb-2">
+        <div class="col-12 italic mb-1">Une fois le transfert réalisé, vous n'aurez peut-être plus accès à la demande. Si tel est le cas, vous serez automatiquement redirigé vers la page de recherche des demandes.</div>
+        <div class="col-12 warning bold mb-1" *ngIf="etape?.value?.code === ETAPE.ETP_INS_CODE">Attention, vous transférez une demande instruite.</div>
+        <div class="col-12 warning bold mb-1" *ngIf="isDelaiInstructionDepasse()">Attention, le délai d’instruction est dépassé.</div>
+      </div>
+      <div class="row" >
+        <div class="sirc-fc-lg">
+          <label class="sirc-label">Nouvel organisme d'attribution</label>
+          <mat-select class="sirc-field" formControlName="orgAttr" [ngClass]="{'error' : hasError(orgAttr)}">
+            <mat-option *ngFor="let org of listeOrganisme" [value]="org" title="{{org.nomCourt}} - {{ org.nom }}" >
+              {{org.nomCourt}} - {{ org.nom }}
+            </mat-option>
+          </mat-select>
+          <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(orgAttr)}">
+            <label class="sirc-info error" *ngIf="!!(orgAttr?.errors?.required)">Ce champ est obligatoire</label>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-1">
+        <label class="col-6 sirc-label">Imprimer et/ou envoyer le courriel de transfert ?</label>
+        <mat-checkbox class="sirc-field col" [checked]="envoiCb" (change)="toggleEnvoiCb()">Courriel</mat-checkbox>
+        <mat-checkbox class="sirc-field col" [checked]="impressionCb" (change)="toggleImpressionCb()">Impression</mat-checkbox>
+      </div>
+      <div class="row no-gutters mb-2 pt-1 pb-1 border-gray" *ngIf="impressionCb || envoiCb">
+        <div class="sirc-fc-md" *ngIf="envoiCb">
+          <label class="sirc-label">Courriel employeur</label>
+          <input class="sirc-field" type="text" formControlName="courrielEmployeurAccuse"
+            [ngClass]="{'error' : hasError(courrielEmployeurAccuse)}" (change)="courrielEmpAccuseChange($event.target.value)">
+          <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(courrielEmployeurAccuse)}">
+          <label class="sirc-info error" *ngIf="!!(courrielEmployeurAccuse?.errors?.required)">Ce champ est obligatoire</label>
+          <label class="sirc-info error" *ngIf="!!(courrielEmployeurAccuse?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+          <label class="sirc-info error" *ngIf="!!(courrielEmployeurAccuse?.errors?.email)">L'adresse courriel renseignée n'est pas valide</label>
+          </div>
+        </div>
+        <div class="sirc-fc-md" *ngIf="envoiCb">
+          <label class="sirc-label">Courriel salarié</label>
+          <input class="sirc-field" type="text" formControlName="courrielSalarieAccuse" 
+            [ngClass]="{'error' : hasError(courrielSalarieAccuse)}" (change)="courrielSalAccuseChange($event.target.value)">
+          <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(courrielSalarieAccuse)}">
+          <label class="sirc-info error" *ngIf="!!(courrielSalarieAccuse?.errors?.required)">Ce champ est obligatoire</label>
+          <label class="sirc-info error" *ngIf="!!(courrielSalarieAccuse?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+          <label class="sirc-info error" *ngIf="!!(courrielSalarieAccuse?.errors?.email)">L'adresse courriel renseignée n'est pas valide</label>
+          </div>
+        </div>
+        <div class="sirc-fc-md">
+          <label class="sirc-label">Signature</label>
+          <mat-select class="sirc-field" formControlName="signature">
+            <mat-option *ngFor="let s of listeSignature" [value]="s" title="{{s.nom}}">
+              {{s.nom}}
+            </mat-option>
+          </mat-select>
+        </div> 
+      </div>
+    </div>
+  </div>
+</div>
+<div class="sirc-modale-boutons-container">
+  <button *ngIf="!submitting && !loading" type="button" class="btn-sirc-o btn-small col-12 col-sm-5"
+    (click)="close()">Annuler</button>
+  <button *ngIf="!submitting && !loading" type="button" (click)="save()" class="btn-sirc-success btn-small col-12 col-sm-5"
+    cdkFocusInitial>Valider</button>
+  <mat-progress-bar mode="indeterminate" *ngIf="submitting"></mat-progress-bar>
+</div>

@@ -1,0 +1,162 @@
+<div class="mt-3">
+  <h3>Identité de l'organisme</h3>
+  <div class="col">
+    <div class="row">
+      <div class="sirc-fc-fill">
+        <label class="sirc-label">Nom complet</label>
+        <input class="sirc-field" type="text" formControlName="nom" [ngClass]="{'error' : hasError(nom)}">
+        <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(nom)}">
+          <label class="sirc-info error" *ngIf="!!(nom?.errors?.required)">Ce champ est obligatoire</label>
+          <label class="sirc-info error" *ngIf="!!(nom?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+        </div>
+      </div>
+      <div class="sirc-fc-sm">
+        <label class="sirc-label">Nom court</label>
+        <input class="sirc-field" type="text" formControlName="nomCourt" [ngClass]="{'error' : hasError(nomCourt)}">
+        <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(nomCourt)}">
+          <label class="sirc-info error" *ngIf="!!(nomCourt?.errors?.required)">Ce champ est obligatoire</label>
+          <label class="sirc-info error" *ngIf="!!(nomCourt?.errors?.maxlength)">Taille maximale : 15 caractères</label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="sirc-fc-sm">
+        <label class="sirc-label">Téléphone</label>
+        <input class="sirc-field" type="text" formControlName="telephone" [ngClass]="{'error' : hasError(telephone)}" >
+        <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(telephone)}">
+          <label class="sirc-info error" *ngIf="!!(telephone?.errors?.maxlength)">Taille maximale : 20 caractères</label>
+        </div>
+      </div>
+      <div class="sirc-fc-sm">
+        <label class="sirc-label">Fax</label>
+        <input class="sirc-field" type="text" formControlName="fax" [ngClass]="{'error' : hasError(fax)}" >
+        <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(fax)}">
+          <label class="sirc-info error" *ngIf="!!(fax?.errors?.maxlength)">Taille maximale : 20 caractères</label>
+        </div>
+      </div>
+      <div class="sirc-fc-sm">
+        <label class="sirc-label">Téléphone du service</label>
+        <input class="sirc-field" type="text" formControlName="telephoneService" [ngClass]="{'error' : hasError(telephoneService)}" >
+        <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(telephoneService)}">
+          <label class="sirc-info error" *ngIf="!!(telephoneService?.errors?.maxlength)">Taille maximale : 20 caractères</label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="sirc-fc-md">
+        <label class="sirc-label">Courriel</label>
+        <input class="sirc-field" type="text" formControlName="courriel" [ngClass]="{'error' : hasError(courriel)}" >
+        <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(courriel)}">
+          <label class="sirc-info error" *ngIf="!!(courriel?.errors?.required)">Ce champ est obligatoire</label>
+          <label class="sirc-info error" *ngIf="!!(courriel?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+          <label class="sirc-info error" *ngIf="!!(courriel?.errors?.email)">Adresse courriel invalide</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h4 class="mt-1">Adresse de l'organisme</h4>
+  <div class="col">
+    <div class="row">
+      <div class="sirc-fc-md">
+        <label class="sirc-label">Département associé</label>
+        <mat-select class="sirc-field" formControlName="departement" [ngClass]="{'error' : hasError(departement)}">
+          <mat-option [value]="null" title=""></mat-option>
+          <mat-option *ngFor="let dept of listeDept"  [value]="dept" title="{{dept.intitule}}">
+            {{dept.intitule}}
+          </mat-option>
+        </mat-select>
+        <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(departement)}">
+          <label class="sirc-info error" *ngIf="!!(departement?.errors?.required)">Ce champ est obligatoire</label>
+        </div>
+      </div> 
+    </div>
+    <div [formGroup]="adresse">
+      <div class="row">
+        <div class="sirc-fc-fill">
+          <label class="sirc-label">Rue</label>
+          <input class="sirc-field" type="text" formControlName="voie" [ngClass]="{'error' : hasError(voie)}">
+          <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(voie)}">
+            <label class="sirc-info error" *ngIf="!!(voie?.errors?.required)">Ce champ est obligatoire</label>
+            <label class="sirc-info error" *ngIf="!!(voie?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+          </div>
+        </div>
+        <div class="sirc-fc-sm">
+          <label class="sirc-label">Complément</label>
+          <input class="sirc-field" type="text" formControlName="complement" [ngClass]="{'error' : hasError(complement)}">
+          <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(complement)}">
+            <label class="sirc-info error" *ngIf="!!(complement?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="sirc-fc-xsm">
+          <label class="sirc-label">Code postal</label>
+          <input class="sirc-field" type="text" placeholder="(ex: 33520)" formControlName="localisation"
+          [ngClass]="{'error' : hasError(localisation)}"
+          [matAutocomplete]="locCodePostal" (input)="getLocalisationsByCode()" (focusout)="focusOutLocalisation()">
+          <mat-autocomplete #locCodePostal="matAutocomplete" (optionSelected)="selectedOption()" [displayWith]="displayValeurCodePostal" [panelWidth]="'unset'" >
+            <mat-option *ngFor="let localisation of filteredLocalisations | async" [value]="localisation" >
+              {{localisation?.commune}} ({{localisation?.codePostal}})
+            </mat-option>
+          </mat-autocomplete>
+          <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(localisation)}">
+            <label class="sirc-info error" *ngIf="!!(localisation?.errors?.required)">Ce champ est obligatoire</label>
+          </div>
+        </div>
+        <div class="sirc-fc-md">
+          <label class="sirc-label">Commune</label>
+          <input class="sirc-field" type="text" placeholder="ex: BRUGES" formControlName="localisation"
+          [ngClass]="{'error' : hasError(localisation)}"
+          [matAutocomplete]="locCommune" (input)="getLocalisationsByCommune()" (focusout)="focusOutLocalisation()">
+          <mat-autocomplete #locCommune="matAutocomplete" (optionSelected)="selectedOption()" [displayWith]="displayValeurCommune" [panelWidth]="'unset'" >
+            <mat-option *ngFor="let localisation of filteredLocalisations | async" [value]="localisation" >
+              {{localisation?.commune}} ({{localisation?.codePostal}})
+            </mat-option>
+          </mat-autocomplete>
+          <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(localisation)}">
+            <label class="sirc-info error" *ngIf="!!(localisation?.errors?.required)">Ce champ est obligatoire</label>
+          </div>
+        </div>
+        <div class="sirc-fc-xsm">
+          <label class="sirc-label">Boîte Postale</label>
+          <input class="sirc-field" type="text" formControlName="bp" [ngClass]="{'error' : hasError(bp)}">
+          <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(bp)}">
+            <label class="sirc-info error" *ngIf="!!(bp?.errors?.maxlength)">Taille maximale : 30 caractères</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h4 class="mt-1">Paramétrage complémentaire</h4>
+  <div class="col">
+    <div class="row">
+      <div class="sirc-fc-md">
+        <label class="sirc-label">Service concerné</label>
+        <input class="sirc-field" type="text" formControlName="infosService" [ngClass]="{'error' : hasError(infosService)}">
+        <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(infosService)}">
+          <label class="sirc-info error" *ngIf="!!(infosService?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+        </div>
+      </div>
+      <div class="sirc-fc-md">
+        <div class="d-flex align-items-top">
+          <label class="sirc-label">Recevoir les notifications de télétransmission</label>
+          <i class="ml-1 material-icons is-btn-small primary" 
+            matTooltip="Si Oui, l'adresse courriel renseignée plus haut recevra systématiquement les courriers électroniques de notification lors d'une télétransmission vers l'organisme courant d'une demande de rupture conventionnelle depuis TéléRC">help</i>
+        </div>
+        <mat-radio-group class="sirc-radio-group org-notif-radio align-items-center" formControlName="notificationTeletransmission" (change)="notificationChange()">
+          <mat-radio-button [value]="false">Non</mat-radio-button>
+          <mat-radio-button [value]="true">Oui</mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div class="sirc-fc-lg">
+        <label class="sirc-label">Informations complémentaires dans l'entête des courriers</label>
+        <input class="sirc-field" type="text" formControlName="infosComplementaires" [ngClass]="{'error' : hasError(infosComplementaires)}">
+        <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(infosComplementaires)}">
+          <label class="sirc-info error" *ngIf="!!(infosComplementaires?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

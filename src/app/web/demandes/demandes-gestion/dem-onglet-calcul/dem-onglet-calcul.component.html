@@ -1,0 +1,190 @@
+<a class="d-none download-link" #downloadLinkConvColl></a>
+<h3 class="mb-1">Calcul de l'indemnité</h3>
+<div [formGroup]="remuneration">
+
+  <div class="sirc-block-p2 mb-2">
+    <div class="row">
+      <div class="col">
+        <h4 class="mb-1">Ancienneté du salarié à la date envisagée de rupture</h4>
+        <div class="row">
+          <div class="sirc-fc-lg no-result" *ngIf="!isAncienneteValide() || !isMoisDernierMoisValide || !isAnneeDernierMoisValide()">
+            <div class="warning bold mb-2">
+              Le calcul de l'indemnité n'a pas été réalisé : veuillez renseigner la totalité des champs du présent encart.
+            </div>
+          </div>
+          <div class="sirc-fc-sm">
+            <label class="sirc-label">Nombre d'années</label>
+            <input class="sirc-field" type="number" formControlName="ancienneteAnnee"
+                  (focusout)="focusOutAncienneteDerniereAnnee($event.target.value)"
+                  [ngClass]="{'warn' : !isAncienneteValide()}"> 
+          </div>
+          <div class="sirc-fc-sm">
+            <label class="sirc-label">Nombre de mois</label>
+            <input class="sirc-field" type="number" max="11" formControlName="ancienneteMois"
+                  (focusout)="focusOutAncienneteDernierMois($event.target.value)"
+                  [ngClass]="{'warn' : !isAncienneteValide()}">
+          </div>
+        </div>
+        <h4 class="mt-1 mb-1">Dernier mois rémunéré connu</h4>
+        <div class="row">
+          <div class="sirc-fc-xsm">
+            <label class="sirc-label">Mois</label>
+            <mat-select class="sirc-field" formControlName="moisDernierMois"
+            [ngClass]="{'warn' : !isMoisDernierMoisValide()}">
+              <mat-option [value]="null" title=""></mat-option>
+              <mat-option *ngFor="let m of MOIS" [value]="m.ordre" title="{{m.intitule}}">
+                {{m.intitule}}
+              </mat-option>
+            </mat-select>
+          </div>
+          <div class="sirc-fc-xsm">
+            <label class="sirc-label">Année</label>
+            <mat-select class="sirc-field" formControlName="anneeDernierMois"
+            [ngClass]="{'warn' : !isAnneeDernierMoisValide()}">
+              <mat-option [value]="null" title=""></mat-option>
+              <mat-option *ngFor="let y of ANNEES" [value]="y" title="{{y}}">
+                {{y}}
+              </mat-option>
+            </mat-select>
+          </div>
+          <div class="sirc-fc-sm">
+            <label class="sirc-label">Rémunération brute (en euros)</label>
+            <input class="sirc-field" type="number" formControlName="remunerationDernierMois" 
+                  (focusout)="focusOutRemunerationDernierMois()">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rémunération brute des 12 derniers mois -->
+  <div class="sirc-block-p2 mb-2">
+    <div class="row">
+      <div class="col">
+        <h4 class="mb-1">Rémunération brute des 12 derniers mois</h4>
+        <div class="row">
+          <div class="sirc-fc-lg no-result" *ngIf="!moisAnneeRemuneration || !moisAnneeRemuneration.length">
+            <div class="warning bold mb-2">
+              Veuillez renseigner les champs de l'encart précédent pour initialiser le tableau des rémunérations.
+            </div>
+          </div>
+          <div class="sirc-fc-lg no-result" *ngIf="!isAllCaseMoisRemunValides()">
+            <div class="warning bold mb-1">
+              Erreur dans le calcul de la rémunération mensuelle brute moyenne : veuillez renseigner les champs du tableau de rémunération.
+            </div>
+          </div>
+          <div class="sirc-fc-xsm" *ngFor="let mr of moisAnneeRemuneration; let i = index">
+            <label class="sirc-label" [ngClass]="{'white' : isCaseInactive(i)}">{{mr.mois}} {{mr.annee}}</label>
+            <input class="sirc-field" type="number" step='0.01' formControlName="mois{{i+1}}Valeur" 
+              [ngClass]="{'inactif-input': isCaseInactive(i),
+                          'premiers-mois-renum': i <= 2,
+                          'warn' : !isCaseMoisRemunValide(i)}" 
+              [readonly]="isCaseInactive(i)"
+              (change)="calculRemunerationMoyenne()">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <h4 class="mt-1 mb-1">Primes</h4>
+        <div class="row">
+          <div class="sirc-fc-md">
+            <label class="sirc-label">Primes annuelles/exceptionnelles au cours des 3 derniers mois</label>
+            <input class="sirc-field" type="number" formControlName="prime"
+                   (change)="calculRemunerationMoyenne()">
+          </div>
+        </div>
+        <div class="row no-gutters">
+          <div class="sirc-fc-lg sirc-block-calcul-automatique mt-2">
+            <label class="sirc-label d-flex align-items-center">Résultat du calcul automatique (moyenne)  <span class="rem-men-aut"> {{moyenneRemunerationMensuelleAutomatique?.toFixed(2)}} </span></label>
+            <div class="ar-item-desc" >Ce résultat ne tient pas compte des situations particulières (notamment alternance des périodes à temps complet et de périodes à temps partiel ...) qui conduisent à un calcul différent de l'indémnité</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rémunération brute - Moyenne la plus élevée entre les 12 ou 3 derniers mois -->
+  <div class="sirc-block-p2 mb-2">
+    <div class="row">
+      <div class="col">
+        <h4 class="mb-1">Rémunération brute - Moyenne la plus élevée entre les 12 ou 3 derniers mois</h4>
+        <div class="row">
+          <div class="sirc-fc-sm">
+            <label class="sirc-label"></label>
+            <input class="sirc-field" type="number" formControlName="moyenneRemunerationMensuelle" 
+                   [ngClass]="{'warn' : !isMoyenneRemunerationBruteValide(moyenneRemunerationMensuelle, moyenneRemunerationMensuelleAutomatique)}">
+            <div class="sirc-errors-container" [ngClass]="{'hidden' : isMoyenneRemunerationBruteValide(moyenneRemunerationMensuelle, moyenneRemunerationMensuelleAutomatique)}">
+              <label class="sirc-info warn" *ngIf="!isMoyenneRemunerationBruteValide(moyenneRemunerationMensuelle, moyenneRemunerationMensuelleAutomatique)">Erreur : doit être supérieur ou égal au résultat du calcul automatique</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Montant brut de l'indemnité spécifique  de rupture conventionnelle proposé -->
+  <div class="sirc-block-p2 mb-2">
+    <div class="row">
+      <div class="col">
+        <h4 class="mb-1">Montant brut de l'indemnité spécifique de rupture conventionnelle proposé</h4>
+        <div class="row">
+          <div class="sirc-fc-sm">
+            <label class="sirc-label">Indemnité proposée</label>
+            <input class="sirc-field" type="number" formControlName="indemnite"
+            [ngClass]="{'warn' : !isIndemniteProposeValide(indemnite, indemniteLegale) || 
+                                                                      !isIndemniteProposeValide(indemnite, indemniteConventionnelle) || 
+                                                                      !isIndemniteProposeNotNull(indemnite?.value)}">
+
+            <div class="sirc-errors-container" [ngClass]="{'hidden' : isIndemniteProposeValide(indemnite, indemniteLegale) && 
+                                                                      isIndemniteProposeValide(indemnite, indemniteConventionnelle) && 
+                                                                      isIndemniteProposeNotNull(indemnite?.value)}">
+                <label class="sirc-info warn" *ngIf="!(indemnite?.value !== null)">L'indemnité de rupture n'a pas été renseignée</label>
+                <label class="sirc-info warn" *ngIf="!isIndemniteProposeValide(indemnite, indemniteLegale)">L'indemnité spécifique est inférieure au minimum légal</label>
+                <label class="sirc-info warn" *ngIf="!isIndemniteProposeValide(indemnite, indemniteConventionnelle)">L'indemnité spécifique est inférieure au minimum conventionnel</label>
+            </div>
+          </div>
+        </div>
+        <div class="row no-gutters">
+          <div class="sirc-fc-lg sirc-block-calcul-automatique mt-1">
+            <label class="sirc-label d-flex align-items-center">Indemnité légale  <span class="rem-men-aut"> {{indemniteLegale?.value}} </span></label>
+            <div class="ar-item-desc" >Ce calcul ne prévoit pas le respect de l'indemnité conventionnelle ... (Texte reste à définir)</div>
+          </div>
+        </div>
+        <div class="row d-flex align-items-end mt-1">
+          <div class="sirc-fc-sm">
+            <label class="sirc-label">Indemnité conventionnelle (éventuellement)</label>
+            <input class="sirc-field" type="number" formControlName="indemniteConventionnelle">
+          </div>
+          <!-- boutons -->
+          <div class="col" *ngIf="isDownloading">
+            <div class="row no-gutters d-flex justify-content-center">
+              <mat-progress-bar class="col-12" mode="indeterminate"></mat-progress-bar>
+              <div class="col-12 p-1 no-result">Récupération du fichier demandé en cours, veuillez patienter...</div>
+            </div>
+          </div>
+          <div class="sirc-fc-sm ml-1" *ngIf="!isDownloading">
+            <button (click)="demandeTelechargerIndemConv()" class="btn-sirc-o btn-icon-small" 
+              title="Télécharger le fichier des indemnités conventionnelles" type="button">
+                Télécharger le fichier des indemnités conventionnelles
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Commentaires -->
+  <div class="sirc-block-p2 mb-2">
+    <div class="row">
+      <div class="sirc-fc-lg">
+        <h4 class="sirc-label">Commentaires</h4>
+        <textarea class="sirc-field" type="text" formControlName="commentaire"></textarea>
+        <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(commentaire)}">
+          <label class="sirc-info error" *ngIf="!!(commentaire?.errors?.maxlength)">Taille maximale : 10000 caractères</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,67 @@
+<app-fil-ariane [filAriane]="filAriane" [accueilVisible]="true"></app-fil-ariane>
+
+<div class="sirc-page-body row">
+  <div class="col mt-md-0">
+    <h1 class="mb-0">Jours Chômés</h1>
+    
+    <div *appSircLoader="loading">
+      <div class="sirc-filter-container">
+        <div class="buttons-container-header">
+          <button class="btn-sirc-o btn-icon-small no-outline" title="Ajouter un jour chômé" (click)="ajoutJourChome()">
+            <i class="material-icons">add</i> Ajouter un jour chômé
+          </button>
+        </div>
+      </div>
+
+      <div class="mb-2">
+        <div class="table-responsive" *appSircLoader="loadingListe">
+          <table class="table sirc-table">
+            <thead>
+              <tr>
+                <th><div class="sortable" (click)="triColonne('intitule')">
+                  <span>Intitulé</span><i class="material-icons">{{getSortIconName('intitule')}}</i>
+                </div></th>
+                <th><div class="sortable" (click)="triColonne('date')">
+                  <span>Date</span><i class="material-icons">{{getSortIconName('date')}}</i>
+                </div></th>
+                <th><div class="sortable" (click)="triColonne('national')">
+                  <span>National</span><i class="material-icons">{{getSortIconName('national')}}</i>
+                </div></th>
+                <th class="actions"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let jc of joursChomes;let i = index; let odd = odd;" [ngClass]="{'odd': odd, 'jc-inactif': !jc.actif}">
+                <td class="jc-nom d-flex align-items-center">
+                  <i *ngIf="jc.systeme" class="material-icons jc-systeme-icon" title="Jour chômé système">build</i>
+                  <span>{{jc.intitule}} {{jc.systeme ? '('+jc.code+')' : ''}}</span>
+                </td>
+                <td>
+                  <span *ngIf="jc.jour !== null; else jcCalcule">{{jc.jour}} {{jc.mois | numberToMonth}}</span>
+                  <ng-template #jcCalcule><span class="italic bold">Calculé</span></ng-template>
+                </td>
+                <td>{{(jc.national)? 'Oui' : 'Non' }}</td>
+                <td class="td-btns">
+                  <i class="material-icons is-btn-small primary" title="Modifier le jour chômé"
+                    [ngClass]="{'inactif': jc.systeme}" (click)="modifJourChome(jc)">edit</i>
+                  <i class="material-icons is-btn-small danger" title="Supprimer le jour chômé" 
+                    [ngClass]="{'inactif': jc.systeme}" (click)="supprJourChome(jc)">delete</i>
+                  <i class="material-icons is-btn-small primary" title="Activer le jour chômé" 
+                    (click)="changerEtatJourChome(jc, true)" *ngIf="!jc.actif">lock_open</i>
+                  <i class="material-icons is-btn-small primary" title="Désactiver le jour chômé" 
+                    (click)="changerEtatJourChome(jc, false)" *ngIf="jc.actif">lock</i>
+                </td>
+              </tr>
+              <tr *ngIf="!joursChomes || joursChomes.length === 0" class="no-result">
+                <td [colSpan]="5">Aucune donnée trouvée.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <app-pager [pager]="searchRequestItem.pager"
+            [inactif]="loadingListe"
+            (navigateCallback)="rechercher()"></app-pager>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,122 @@
+<a class="d-none download-link" #downloadLinkCerfa></a>
+<h3 class="mb-1">Gestion</h3>
+
+<div class="sirc-block-p2 mb-2">
+  <div class="row">
+    <div class="col">
+      <h4 class="mb-2">Récapitulatif de la demande</h4>
+      <div class="row">
+        <div class="sirc-fc-md">
+          <label class="sirc-label">Organisme de réception</label>
+          <mat-select class="sirc-field" formControlName="organismeReception" *ngIf="!id?.value"
+            [ngClass]="{'error' : hasError(organismeReception)}">
+            <mat-option *ngFor="let org of listeOrganismesAccessibles" [value]="org" title="{{ org.nomCourt }} - {{ org.nom }}"
+            (onSelectionChange)="organismeReceptionChange()">
+              {{ org.nomCourt }} - {{ org.nom }} 
+            </mat-option>
+          </mat-select>
+          <input class="sirc-field" type="text" *ngIf="id?.value" [disabled]="true"
+            [value]="organismeReception?.value?.nomCourt + '-' + organismeReception?.value?.nom" >
+          <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(organismeReception)}">
+            <label class="sirc-info error" *ngIf="!!(organismeReception?.errors?.required)">Ce champ est obligatoire</label>
+          </div>
+        </div>
+        <div class="sirc-fc-sm">
+          <label class="sirc-label">Date de réception</label>
+          <div class="sirc-date-field-container">
+            <input class="sirc-field" [max]="maxDateReception" (dateChange)="dateReceptionChange()"
+              [matDatepicker]="pickerDateReception" formControlName="dateReception" [readonly]="true"
+              [ngClass]="{'warn' : !isDateReceptionValide(dateReception?.value, dateFinDelaiRetractation?.value),
+                          'error' : hasError(dateReception)}"/>
+            <mat-datepicker-toggle [for]="pickerDateReception" ></mat-datepicker-toggle>
+            <mat-datepicker #pickerDateReception ></mat-datepicker>
+            <i class="material-icons is-btn-small" (click)="supprimerDateReception()">close</i>
+          </div>
+          <div class="sirc-errors-container" [ngClass]="{'hidden' : (isDateReceptionValide(dateReception?.value, dateFinDelaiRetractation?.value) && !hasError(dateReception))}">
+            <label class="sirc-info error" *ngIf="!!(dateReception?.errors?.required)">Ce champ est obligatoire</label>
+            <label class="sirc-info warn" *ngIf="!isDateReceptionValide(dateReception?.value, dateFinDelaiRetractation?.value)">La demande peut être transmise à l’administration au plus tôt le lendemain de la fin du délai de rétractation</label>
+          </div>
+        </div>
+        <div class="sirc-fc-xsm mt-2" *ngIf="!isConsultMode() && id?.value">
+          <button (click)="demandeTransferer()" type="button" class="btn-sirc-o btn-icon-small" title="Transférer">
+            Transférer
+          </button>
+        </div>
+      </div>
+      <!-- -->
+      <div class="row">
+        <div class="sirc-fc-md" *ngIf="id?.value">
+          <label class="sirc-label">Organisme d'attribution</label>
+          <input class="sirc-field" type="text" [value]="organismeAttribution?.value?.nomCourt + '-' + organismeAttribution?.value?.nom" [disabled]="true">
+          <div class="sirc-errors-container"><!-- Pour l'espacement du formulaire--></div>
+        </div>
+        <div class="sirc-fc-sm" *ngIf="id?.value && dateTransfert?.value">
+          <label class="sirc-label">Date de transfert</label>
+          <div class="sirc-date-field-container">
+            <input class="sirc-field" [ngClass]="{'error' : hasError(dateTransfert)}" 
+              [matDatepicker]="pickerDateTransfert" formControlName="dateTransfert"/>
+            <mat-datepicker #pickerDateTransfert ></mat-datepicker>
+          </div>
+          <div class="sirc-errors-container"><!-- Pour l'espacement du formulaire--></div>
+        </div>
+      </div>
+      <!-- -->
+      <div class="row">
+        <div class="sirc-fc-sm">
+          <label class="sirc-label">Demande télétransmise</label>
+          <input class="sirc-field" type="text" [value]="!!(this.dateTeletransmission.value) | booleanPipe" disabled/>
+          <div class="sirc-errors-container"><!-- Pour l'espacement du formulaire--></div>
+        </div>
+        <div class="sirc-fc-sm" *ngIf="id?.value && dateTeletransmission?.value">
+          <label class="sirc-label">Date de télétransmission</label>
+          <div class="sirc-date-field-container">
+            <input class="sirc-field" [matDatepicker]="pickerDateTeletransmission" formControlName="dateTeletransmission"/>
+            <mat-datepicker #pickerDateTeletransmission ></mat-datepicker>
+          </div>
+          <div class="sirc-errors-container"><!-- Pour l'espacement du formulaire--></div>
+        </div>
+      </div>
+       <!-- -->
+      <div class="row">
+        <div class="sirc-fc-md">
+          <label class="sirc-label">Courriel du contact</label>
+          <input class="sirc-field" type="text" formControlName="courrielContact" [ngClass]="{'error' : hasError(courrielContact)}">
+          <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(courrielContact)}">
+            <label class="sirc-info error" *ngIf="!!(courrielContact?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+            <label class="sirc-info error" *ngIf="!!(courrielContact?.errors?.email)">L'adresse courriel renseignée n'est pas valide</label>
+          </div>
+        </div>
+      </div>
+       <!-- -->
+      <div class="row">
+        <div class="sirc-fc-lg">
+          <label class="sirc-label">Commentaire</label>
+          <textarea class="sirc-field" type="text" formControlName="commentaire" [ngClass]="{'error' : hasError(commentaire)}"></textarea>
+          <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(commentaire)}">
+            <label class="sirc-info error" *ngIf="!!(commentaire?.errors?.maxlength)">Taille maximale : 10000 caractères</label>
+          </div>
+        </div>
+      </div>
+      <!-- boutons -->
+      <div class="row mt-2">
+        <div class="col-12" *ngIf="isDownloading">
+          <div class="row no-gutters d-flex justify-content-center">
+            <mat-progress-bar class="col-12" mode="indeterminate"></mat-progress-bar>
+            <div class="col-12 p-1 no-result">Récupération du fichier demandé en cours, veuillez patienter...</div>
+          </div>
+        </div>
+        <div class="sirc-fc-sm" *ngIf="dateTeletransmission?.value && !isDownloading">
+          <button (click)="demandeTelechargerCERFA()" type="button" class="btn-sirc-o btn-icon-small" title="Télécharger le CERFA télétransmis">
+            Télécharger le CERFA télétransmis
+          </button>
+        </div>
+        <div class="sirc-fc-sm" *ngIf="id?.value && !isDownloading">
+          <button (click)="demandeGenererLaSynthese()" type="button" class="btn-sirc-o btn-icon-small" title="Générer la synthèse">
+            Générer la synthèse
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

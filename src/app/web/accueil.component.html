@@ -1,0 +1,168 @@
+<app-fil-ariane [filAriane]="filAriane" [accueilVisible]="true"></app-fil-ariane>
+
+<div class="sirc-page-body row">
+  <div class="col mt-md-0">
+    <div *appSircLoader="loading">
+      <!-- MESSAGE INFO-->
+      <div class="acc-message-info-container mb-3" 
+        *ngIf="messageInfo?.visible && messageInfoDatePublicationDepassee()">
+        <div class="sirc-block-p2 message-info-block ql-snow {{messageInfo?.importance}}">
+          <h3 [innerHTML]="messageInfo?.titre"></h3>
+          <div class="ql-editor" [innerHTML]="messageInfo?.contenu"></div>
+        </div>
+      </div>
+      <!-- ACTIONS RAPIDES -->
+      <div class="acc-actions-rapides p-sm-1 mb-2 row no-gutters">
+        <h2 class="mb-2 col-12">Que souhaitez-vous faire ?</h2>
+        <div class="ar-item-container mt-1 mb-1 col-12 col-md-10">
+          <div class="row no-gutters">
+            <div class="ar-icone">
+              <i class="sirc-icon ico-ouvrir-demande" (click)="actionOuvrirDemandeAvecNumero()">
+                <span class="path1"></span><span class="path2"></span>
+              </i>
+            </div>
+            <div class="ar-item-infos-container col">
+              <div class="row">
+                <div class="ar-item-titre fake-link col-12" (click)="actionOuvrirDemandeAvecNumero()">
+                  Ouvrir une demande avec son numéro
+                </div>
+                <div class="ar-item-desc col-12">Permet à l'utilisateur d'ouvrir le formulaire de saisie d'une demande à partir de son numéro (identifiant métier). 
+                  N'importe quelle demande peut être ouverte depuis cette action rapide (i.e. quelle que soit l'étape en cours) à condition qu'elle existe bien dans la base de données d'IntraRC.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ar-item-container mt-1 mb-1 col-12 col-md-10" *ngIf="!userIsObservateur()">
+          <div class="row no-gutters">
+            <div class="ar-icone">
+              <i class="sirc-icon ico-upload" (click)="actionRecupererDemandeTeleRC()">
+                <span class="path1"></span><span class="path2"></span><span class="path3"></span>
+              </i>
+            </div>
+            <div class="ar-item-infos-container col">
+              <div class="row">
+                <div class="ar-item-titre fake-link col-12" (click)="actionRecupererDemandeTeleRC()">
+                  Récupérer une demande depuis TéléRC
+                </div>
+                <div class="ar-item-desc col-12">
+                  Permet à l'utilisateur de récupérer une demande depuis TéléRC, demande qui n'aurait pas été télétransmise et dont le CERFA aurait donc été reçu par l'organisme par voie postale. 
+                  En récupérant la demande depuis TéléRC, le système permet à l'utilisateur d'ouvrir le formulaire de saisie de demande pré-rempli en fonction des données saisies par l'utilisateur côté Public.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ar-item-container mt-1 mb-1 col-12 col-md-10" *ngIf="!userIsObservateur()">
+          <div class="row no-gutters">
+            <div class="ar-icone">
+              <i class="sirc-icon ico-creer-demande" (click)="actionSaisirDemandePapier()">
+                <span class="path1"></span><span class="path2"></span><span class="path3"></span>
+                <span class="path4"></span><span class="path5"></span><span class="path6"></span>
+                <span class="path7"></span>
+              </i>
+            </div>
+            <div class="ar-item-infos-container col">
+              <div class="row">
+                <div class="ar-item-titre fake-link col-12" (click)="actionSaisirDemandePapier()">
+                  Saisir une demande papier
+                </div>
+                <div class="ar-item-desc col-12">Permet à l'utilisateur de saisir une demande papier à partir d'un CERFA reçu par voie postale/remis en main propre, et qui n'a donc pas été saisie initialement sur TéléRC.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOC SYNTHESE -->
+      <div class="acc-synthese-dossier p-sm-1 mb-2 row no-gutters">
+        <h2 class="mb-2 col-12">Synthèse des dossiers</h2>
+        <div class="acc-tuiles-container col-12">
+          <div class="row no-gutters" *appSircLoader="tuilesLoading">
+            <div class="tuile-org-container col-12 mb-1" *ngIf="tuileTotaux">
+              <div class="tuile-org tuile-totaux row no-gutters p-1">
+                <div class="col-12 col-sm-6">
+                  <h4 class="tuile-titre">
+                    <span (click)="ouvrirRecherche(tuileTotaux, undefined, true)" title="{{titreLiens}}">
+                      {{(tuileTotaux?.organisme) ? tuileTotaux.organisme.nomCourt : 'Totaux' }}
+                    </span>
+                  </h4>
+                  <div class="tuile-org-nom">{{(tuileTotaux?.organisme) ? tuileTotaux.organisme.nom : 'Cumul des indicateurs de tous les organismes accessibles' }}</div>
+                </div>
+                <div class="tuile-nbrs-container col-12 col-sm-6 row no-gutters align-items-end">
+                  <div class="col-6">
+                    <div class="tuile-nbr-titre">A instruire</div>
+                    <div class="tuile-nbr ainstruire">
+                      <span (click)="ouvrirRecherche(tuileTotaux, _ETAPE.ETP_AIN_CODE, true)" title="{{titreLiens}}">
+                        {{tuileTotaux?.nbrAInstruire}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="tuile-nbr-titre">Instruits</div>
+                    <div class="tuile-nbr instruits">
+                      <span (click)="ouvrirRecherche(tuileTotaux, _ETAPE.ETP_INS_CODE, true)" title="{{titreLiens}}">
+                        {{tuileTotaux?.nbrInstruits}}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <i class="material-icons is-btn" title="Afficher les tuiles" 
+                  (click)="changeAccordeon(true)" *ngIf="!tuilesVisibles && tuiles.length > 1">expand_more</i>
+                <i class="material-icons is-btn" title="Masquer les tuiles" 
+                  (click)="changeAccordeon(false)" *ngIf="tuilesVisibles && tuiles.length > 1">expand_less</i>
+              </div>
+            </div>
+            <div class="tuiles-orgs-container col-12" *ngIf="tuiles?.length > 1 && tuilesVisibles" >
+              <div class="row">
+                <div class="tuile-org-container col-12 col-md-6 col-lg-4 mb-1" *ngFor="let tuile of tuiles" >
+                  <div class="tuile-org row no-gutters p-1">
+                    <div class="col-12">
+                      <h4 class="tuile-titre">
+                        <span (click)="ouvrirRecherche(tuile)" title="{{titreLiens}}">
+                          {{tuile.organisme.nomCourt}}
+                        </span>
+                      </h4>
+                      <div class="tuile-org-nom">{{tuile.organisme.nom}}</div>
+                    </div>
+                    <div class="tuile-nbrs-container col-12 row no-gutters align-items-end">
+                      <div class="col-6">
+                        <div class="tuile-nbr-titre">A instruire</div>
+                        <div class="tuile-nbr ainstruire">
+                          <span (click)="ouvrirRecherche(tuile, _ETAPE.ETP_AIN_CODE)" title="{{titreLiens}}">
+                            {{tuile?.nbrAInstruire}}
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="tuile-nbr-titre">Instruits</div>
+                        <div class="tuile-nbr instruits">
+                          <span (click)="ouvrirRecherche(tuile, _ETAPE.ETP_INS_CODE)" title="{{titreLiens}}">
+                            {{tuile?.nbrInstruits}}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="no-result col-12" *ngIf="!tuiles || tuiles.length === 0" >
+              <p>Aucune donnée à afficher.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+
+      <!-- ESPACE DOCUMENTAIRE -->
+      <div class="acc-espace-doc" *ngIf="mainArticle?.enfants?.length > 0">
+        <div class="sirc-block-p2 mb-2">
+          <h2 class="mb-1">Voir aussi</h2>
+          <div class="row">
+            <a class="col-12 col-md" *ngFor="let art of mainArticle?.enfants" routerLink="/espace-documentaire/{{art.id}}">{{art.titre}}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

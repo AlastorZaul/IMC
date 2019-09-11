@@ -1,0 +1,43 @@
+.ed-menu-container {
+    .ed-menu {
+        >app-menu-arborescent>ul {
+            padding-left: 0px !important;
+            ul {
+                padding-inline-start: 20px;
+            }
+        }
+    }
+}
+
+.ed-article-container {
+    .ed-article-enfants-content {
+        >app-menu-arborescent>ul {
+            ul {
+                padding-inline-start: 25px;
+            }
+        }
+    }
+    .ed-article-content {
+        .bloc-info { font-style: italic; text-align: center; }
+        img.petit { width: 25%;  }
+        img.moyen { width: 50%;  }
+        img.grand { width: 100%; }
+        video.petit { width: 25%; height: 25%;  }
+        video.moyen { width: 50%; height: 50%;  }
+        video.grand { width: 100%; height: 100%; }
+    }
+}
+
+li.menu-arbo-item {
+    @extend .d-flex, .align-items-center;
+    list-style-type: none;
+    font-size: $font-size-small;
+    i {
+        margin-right: 5px;
+        font-size: $font-size-scale;
+    }
+}
+.menu-arbo-nodata {
+    font-size: 1rem;
+    font-style: italic;
+}

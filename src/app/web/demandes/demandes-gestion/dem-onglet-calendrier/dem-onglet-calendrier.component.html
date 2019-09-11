@@ -1,0 +1,210 @@
+<h3 class="mb-1">Entretiens</h3>
+<div formArrayName="entretiens" *ngFor="let entretien of entretiens.controls; let i = index;">
+  <div [formGroupName]="i">
+    <div class="sirc-block-p2 mb-2">
+      <div class="row">
+        <div class="col">
+          <div class="row">
+            <div class="sirc-fc-fill mb-0">
+              <label class="sirc-label">Date de l'entretien</label>
+              <div class="sirc-date-field-container">
+                <input class="sirc-field" [matDatepicker]="pickerDateEntretien" formControlName="date" (dateChange)="dateEntretienChange()"/>
+                <mat-datepicker-toggle [for]="pickerDateEntretien" ></mat-datepicker-toggle>
+                <mat-datepicker #pickerDateEntretien ></mat-datepicker>
+                <i class="material-icons is-btn-small" (click)="supprimerDate(date(i))">close</i>
+              </div>
+              <div class="sirc-errors-container" [ngClass]="{'hidden' : isAuMoinsUnEntretienRenseigne(this.entretiens)}">
+                <label class="sirc-info warn" *ngIf="!isAuMoinsUnEntretienRenseigne(this.entretiens)">Vous n'avez renseigné aucun entretien</label>
+              </div>
+            </div>
+            <div class="col-4 d-flex align-items-center justify-content-end" *ngIf="entretiens?.value?.length > 1 && !isConsultMode()">
+              <button (click)="supprimerEntretien(i)" class="btn-sirc-danger-o btn-icon-small" title="Supprimer" type="button">
+                  Supprimer <i class="material-icons ml-1">clear</i> 
+              </button>
+            </div>
+          </div>
+          <!-- Salarié assité -->
+          <div class="row infos-entretien">
+            <div class="col-12 col-md-6 col-entretien-employeur">
+              <div class="sirc-fc-lg">
+                <h4>Salarié</h4>
+              </div>
+              <!-- INFORMATIONS Employeur -->
+              <div class="row no-gutters">
+                <div class="sirc-fc-lg">
+                  <label class="sirc-label">Salarié assisté</label>
+                  <mat-radio-group class="sirc-radio-group" formControlName="salarieAssiste"
+                                  (change)="radioSalarieAssisteChange($event?.value, i)">
+                    <mat-radio-button [value]=true>Oui</mat-radio-button>
+                    <mat-radio-button [value]=false>Non</mat-radio-button>
+                  </mat-radio-group>
+                  <div class="sirc-errors-container" *ngIf="!isSalarieAssisteValide(salarieAssiste(i), employeurAssiste(i)?.value)">
+                    <label class="sirc-info warn">Entretien n° {{i + 1}}: Non respect des règles de l’assistance : l’employeur ne peut être assisté que si le (ou la) salarié(e) a choisi de l’être</label>
+                  </div>
+                </div>
+
+                <div class="sirc-fc-lg" *ngIf="entretiens?.value[i]?.salarieAssiste">
+                  <label class="sirc-label">Nom et prénom de l'assistant</label>
+                  <input class="sirc-field" type="text" formControlName="nomAssistantSalarie">
+                  <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(nomAssistantSalarie(i))}">
+                    <label class="sirc-info error" *ngIf="!!(nomAssistantSalarie(i)?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+                  </div>
+                </div>
+                <div class="sirc-fc-lg" *ngIf="entretiens?.value[i]?.salarieAssiste">
+                  <label class="sirc-label">Qualité</label>
+                  <mat-select class="sirc-field" formControlName="qualiteAssistantSalarie">
+                    <mat-option *ngFor="let q of listeQualiteAssistantSalarie"  [value]="q" title="{{q.intitule}}">
+                      {{q.intitule}}
+                    </mat-option>
+                  </mat-select>
+                  <div class="sirc-errors-container" [ngClass]="{'hidden' : isQualiteAssistantValide(qualiteAssistantSalarie(i), salarieAssiste(i)?.value)}">
+                    <label class="sirc-info warn" *ngIf="!isQualiteAssistantValide(qualiteAssistantSalarie(i), salarieAssiste(i)?.value)">En cas d'assistance, veuillez renseigner le champ "Qualité</label>
+                  </div>
+                </div> 
+              </div>
+            </div>
+            <!-- Employeur assité -->
+            <div class="col-12 col-md-6 col-entretien-employeur">
+              <div class="sirc-fc-lg">
+                <h4>Employeur</h4>
+              </div>
+              <!-- INFORMATIONS Employeur -->
+              <div class="row no-gutters">
+                <div class="sirc-fc-lg">
+                  <label class="sirc-label">Employeur assisté</label>
+                  <mat-radio-group class="sirc-radio-group" formControlName="employeurAssiste"
+                                  (change)="radioEmployeurAssisteChange($event?.value, i)">
+                    <mat-radio-button [value]=true>Oui</mat-radio-button>
+                    <mat-radio-button [value]=false>Non</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+                
+                <div class="sirc-fc-lg" *ngIf="entretiens?.value[i]?.employeurAssiste">
+                  <label class="sirc-label">Nom et prénom de l'assistant</label>
+                  <input class="sirc-field" type="text" formControlName="nomAssistantEmployeur">
+                  <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(nomAssistantEmployeur(i))}">
+                    <label class="sirc-info error" *ngIf="!!(nomAssistantEmployeur(i)?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+                  </div>
+                </div>
+                <div class="sirc-fc-lg" *ngIf="entretiens?.value[i]?.employeurAssiste">
+                  <label class="sirc-label">Qualité</label>
+                  <mat-select class="sirc-field" formControlName="qualiteAssistantEmployeur">
+                    <mat-option *ngFor="let q of listeQualiteAssistantEmployeur"  [value]="q" title="{{q.intitule}}">
+                      {{q.intitule}}
+                    </mat-option>
+                  </mat-select>
+                  <div class="sirc-errors-container" [ngClass]="{'hidden' : isQualiteAssistantValide(qualiteAssistantEmployeur(i), employeurAssiste(i)?.value)}">
+                    <label class="sirc-info warn" *ngIf="!isQualiteAssistantValide(qualiteAssistantEmployeur(i), employeurAssiste(i)?.value)">En cas d'assistance, veuillez renseigner le champ "Qualité</label>
+                  </div>
+                </div>
+              </div> 
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row" *ngIf="!isConsultMode()">
+  <div class="col-12 d-flex justify-content-center">
+      <button class="btn-sirc btn-icon-small" title="Ajouter un entretien" type="button"
+        (click)="ajouterEntretien()" [disabled]="entretiens?.value?.length >= 5">
+        Ajouter entretien <i class="material-icons ml-1">add</i> 
+      </button>
+  </div>
+</div>
+
+
+
+<!-- Remarques entretiens -->
+<div class="sirc-block-p2 mt-2">
+  <div class="row">
+    <div class="sirc-fc-lg">
+      <h4 class="sirc-label">Remarques complémentaires</h4>
+      <textarea class="sirc-field" type="text" formControlName="remarqueEntretiens" [ngClass]="{'error' : hasError(remarqueEntretiens)}"></textarea>
+      <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(remarqueEntretiens)}">
+        <label class="sirc-info error" *ngIf="!!(remarqueEntretiens?.errors?.maxlength)">Taille maximale : 10000 caractères</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Calendrier de la demande -->
+<h3 class="pt-3">Calendrier de la demande</h3>
+<div class="sirc-block-p2">
+  <!-- dates 1 -->
+  <div class="row">
+    <div class="sirc-fc-md">
+      <label class="sirc-label">Date de signature des parties</label>
+      <div class="sirc-date-field-container">
+        <input class="sirc-field" [matDatepicker]="pickerDateSignature" formControlName="dateSignature" 
+          [readonly]="true"/>
+        <mat-datepicker-toggle [for]="pickerDateSignature" ></mat-datepicker-toggle>
+        <mat-datepicker #pickerDateSignature ></mat-datepicker>
+        <i class="material-icons is-btn-small" (click)="supprimerDate(dateSignature)">close</i>
+      </div>
+      <div class="sirc-errors-container" [ngClass]="{'hidden' : isDateSignatureRenseigne() && isDateSignaturePosterieurEntretien()}">
+        <label class="sirc-info warn" *ngIf="!isDateSignaturePosterieurEntretien()">La date de signature ne peut pas être antérieure à celle du premier entretien</label>
+        <label class="sirc-info warn" *ngIf="!isDateSignatureRenseigne()">La date de signature des parties n'est pas renseignée</label>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="sirc-fc-sm">
+      <label class="sirc-label">Date d'envoi à l'administration</label>
+      <div class="sirc-date-field-container">
+        <input class="sirc-field" [matDatepicker]="pickerDateFinDelaiRetractation" formControlName="dateFinDelaiRetractation"
+        [ngClass]="{'warning' : !isDateFinDelaiRetractationValide(dateFinDelaiRetractation.value, controleDateFinDelaiRetrac)}" [readonly]="true"/>
+        <mat-datepicker-toggle [for]="pickerDateFinDelaiRetractation"></mat-datepicker-toggle>
+        <mat-datepicker #pickerDateFinDelaiRetractation></mat-datepicker>
+        <i class="material-icons is-btn-small" (click)="supprimerDate(dateFinDelaiRetractation)">close</i>
+      </div>
+      <div class="sirc-errors-container" [ngClass]="{'hidden' : isDateFinDelaiRetractationValide(dateFinDelaiRetractation.value, controleDateFinDelaiRetrac)}">
+        <label class="sirc-info warn" *ngIf="!isDateFinDelaiRetractationValide(dateFinDelaiRetractation.value, controleDateFinDelaiRetrac)">Non-respect du délai de rétractation de 15 jours calendaires</label>
+      </div>
+    </div>
+    <div class="col-12 col-sm d-flex align-items-center justify-content-end">
+      <div class="row separation-dates-controle">
+        <div class="col-12">
+          <label class="sirc-label mr-1">Date de fin du délai de rétractation - <b>Contrôle</b> : </label>
+          <label>{{(controleDateFinDelaiRetrac)? (controleDateFinDelaiRetrac | date:'dd/MM/y') : ''}}</label>
+        </div>
+        <div class="col-12">
+            <label class="sirc-label mr-1">Date de fin du délai d'instruction : </label>
+            <label>{{(dateFinDelaiInstruction?.value)? (dateFinDelaiInstruction?.value | date:'dd/MM/y') : ''}}</label>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="sirc-fc-md">
+      <label class="sirc-label">Date envisagée de la rupture du contrat de travail</label>
+      <div class="sirc-date-field-container">
+        <input class="sirc-field" [matDatepicker]="pickerDateEnvisageeRupture" [ngClass]="{'warning' : !isDateEnvisageeRuptureValide(dateEnvisageeRupture.value, dateFinDelaiInstruction.value)}" 
+          formControlName="dateEnvisageeRupture" [readonly]="true"/>
+        <mat-datepicker-toggle [for]="pickerDateEnvisageeRupture" ></mat-datepicker-toggle>
+        <mat-datepicker #pickerDateEnvisageeRupture ></mat-datepicker>
+        <i class="material-icons is-btn-small" (click)="supprimerDate(dateEnvisageeRupture)">close</i>
+      </div>
+      <div class="sirc-errors-container" [ngClass]="{'hidden' : isDateEnvisageeRuptureValide(dateEnvisageeRupture.value, dateFinDelaiInstruction.value)  && dateEnvisageeRupture?.value !== null}">
+        <label class="sirc-info warn" *ngIf="!(dateEnvisageeRupture?.value !== null)">La date de rupture n'est pas renseignée</label>
+        <label class="sirc-info warn" *ngIf="!isDateEnvisageeRuptureValide(dateEnvisageeRupture.value, dateFinDelaiInstruction.value)">La date de rupture ne peut intervenir avant le lendemain du jour de l'homologation</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Autres clauses de la convention de rupture -->
+<div class="sirc-block-p2 mt-2 mb-2">
+  <div class="row">
+    <div class="sirc-fc-lg">
+        <h4 class="sirc-label">Autres clauses de la convention de rupture</h4>
+      <textarea class="sirc-field" type="text" formControlName="autresClauses" [ngClass]="{'error' : hasError(autresClauses)}"></textarea>
+      <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(autresClauses)}">
+        <label class="sirc-info error" *ngIf="!!(autresClauses?.errors?.maxlength)">Taille maximale : 10000 caractères</label>
+      </div>
+    </div>
+  </div>
+</div>

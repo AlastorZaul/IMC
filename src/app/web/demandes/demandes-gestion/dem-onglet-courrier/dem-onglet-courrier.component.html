@@ -1,0 +1,129 @@
+<h3>Courriers</h3>
+<a class="d-none download-link" #downloadLinkCourriers></a>
+
+<div  formArrayName="courriers">
+  <div class="sirc-block-p2 mb-2">
+    <!-- Tableau récapitulatif des courriers/courriels imprimés ou envoyés -->
+    <label class="sirc-label-titre mb-2">Tableau récapitulatif des courriers/courriels imprimés ou envoyés</label>
+    <div class="table-responsive">
+      <table class="table sirc-table sirc-table-courrier-demande">
+        <thead>
+          <tr>
+            <th><div>
+              <span>Date</span>
+            </div></th>
+            <th><div>
+              <span>Action</span>
+            </div></th>
+            <th><div>
+              <span>Type</span>
+            </div></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of courriers?.value;let i = index; let odd = odd;" [ngClass]="{odd: odd}">
+            <td>{{c?.date | date: 'dd/MM/yyyy'}}</td>
+            <td>{{c?.operation}}</td>
+            <td>{{c?.typeCourrier?.intitule}}</td>
+          </tr>
+          <tr *ngIf="!courriers || courriers?.value?.length === 0" class="no-result">
+            <td [colSpan]="3">Aucun courrier n'a encore été imprimé ou envoyé pour cette demande.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="buttons-container-footer" *ngIf="courriers?.value?.length > 0">
+      <button class="btn-sirc btn-icon-small" type="button" *ngIf="!isDownloading"
+        title="Exporter les données" (click)="exporter()">
+        <i class="material-icons">archive</i> Exporter
+      </button>
+      <div class="col-12" *ngIf="isDownloading">
+        <div class="row no-gutters d-flex justify-content-center">
+          <mat-progress-bar class="col-12" mode="indeterminate"></mat-progress-bar>
+          <div class="col-12 p-1 no-result">Récupération du fichier demandé en cours, veuillez patienter...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Imprimer et/ou envoyer un courriel -->
+  <div class="sirc-block-p2 mb-2">
+    <label class="sirc-label-titre mb-2">Imprimer et/ou envoyer un courriel</label>
+    <div class="row">
+      <div class="sirc-fc-xsm">
+        <span>Document(s) <i class="material-icons">trending_flat</i></span>
+      </div>
+
+      <div class="col">
+        <div class="row" *ngFor="let tc of listeTypeCourrier |
+            courrierAutorise: statut?.value?.code: etape?.value?.code: dateTransfert?.value;let i = index;">
+          <div class="type-courrier mb-1 col-4" >
+              {{tc.intitule}}
+          </div>
+          <mat-checkbox class="sirc-field ml-5 col-2"
+                        [checked]="isInArray(tc.code, OPERATION_COURRIER.COURRIEL)" 
+                        (change)="pushOrRemoveFromArray($event.checked, tc.code, OPERATION_COURRIER.COURRIEL)">Courriel</mat-checkbox>
+          <mat-checkbox class="sirc-field ml-5 col-2"
+                        [checked]="isInArray(tc.code, OPERATION_COURRIER.IMPRESSION)"
+                        (change)="pushOrRemoveFromArray($event.checked, tc.code, OPERATION_COURRIER.IMPRESSION)">Impression</mat-checkbox>
+        </div>
+      </div>
+    </div>
+
+    <!-- courriels -->
+    <div [formGroup]="courrielForm">
+
+      <div class="row mt-2">
+        <div class="sirc-fc-md">
+          <label class="sirc-label">Courriel employeur</label>
+          <input class="sirc-field" type="text" formControlName="courrielEmployeurAccuse" (change)="courrielEmpAccuseChange($event.target.value)">
+          <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(courrielEmployeurAccuse)}">
+            <label class="sirc-info error" *ngIf="!!(courrielEmployeurAccuse?.errors?.required)">Ce champ est obligatoire</label>
+            <label class="sirc-info error" *ngIf="!!(courrielEmployeurAccuse?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+            <label class="sirc-info error" *ngIf="!!(courrielEmployeurAccuse?.errors?.email)">L'adresse courriel renseignée n'est pas valide</label>
+          </div>
+        </div>
+        <div class="sirc-fc-md">
+          <label class="sirc-label">Courriel salarié</label>
+          <input class="sirc-field" type="text" formControlName="courrielSalarieAccuse" (change)="courrielSalAccuseChange($event.target.value)">
+          <div class="sirc-errors-container" [ngClass]="{'hidden' : !hasError(courrielSalarieAccuse)}">
+            <label class="sirc-info error" *ngIf="!!(courrielSalarieAccuse?.errors?.required)">Ce champ est obligatoire</label>
+            <label class="sirc-info error" *ngIf="!!(courrielSalarieAccuse?.errors?.maxlength)">Taille maximale : 250 caractères</label>
+            <label class="sirc-info error" *ngIf="!!(courrielSalarieAccuse?.errors?.email)">L'adresse courriel renseignée n'est pas valide</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-1">
+        <div class="sirc-fc-md">
+          <label class="sirc-label">Signature</label>
+          <mat-select class="sirc-field" formControlName="signature">
+            <mat-option *ngFor="let s of listeSignature" [value]="s" title="{{s.nom}}">
+              {{s.nom}}
+            </mat-option>
+          </mat-select>
+        </div> 
+        <div class="sirc-fc-sm ml-1" *ngIf="showLRAR">
+          <label class="sirc-label">LRAR</label>
+          <mat-radio-group class="sirc-radio-group" formControlName="lrar">
+            <mat-radio-button [value]="true">Oui</mat-radio-button>
+            <mat-radio-button [value]="false">Non</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+
+      <div class="buttons-container-footer" *ngIf="listeCourrierToAdd?.length > 0 && !envoyerImprimer && !previsualisation">
+        <button (click)="imprimerEnvoyer()" class="btn-sirc-o btn-icon-small" 
+          type="button" title="Imprimer et envoyer" >
+          <span *ngIf="impression && !courriel">Imprimer</span>
+          <span *ngIf="courriel && !impression">Envoyer</span>
+          <span *ngIf="impression && courriel">Imprimer et envoyer</span>
+        </button>
+        <button (click)="previsualiser()" class="btn-sirc-o btn-icon-small" *ngIf="courriel" 
+          type="button" title="Prévisualiser">
+          Prévisualiser les courriels
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

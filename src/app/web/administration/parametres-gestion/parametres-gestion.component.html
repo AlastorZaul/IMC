@@ -1,0 +1,33 @@
+<app-fil-ariane [filAriane]="filAriane" [accueilVisible]="true"></app-fil-ariane>
+
+<div class="sirc-page-body row">
+  <div class="col mt-md-0">
+    <h1 class="mb-1">Messages d'information</h1>  
+
+    <form [formGroup]="modeleForm" (ngSubmit)="save()">
+    <div *appSircLoader="loading">
+      <div class="sirc-block mb-2">
+        <app-message-information 
+          *ngFor="let mi of messagesInfos.controls; let i=index"
+          [parentSubmitted]="submitted" [messageInfoFormGroup]="mi" [titreMessage]="getTitreMessageForElement(mi.value)"
+        ></app-message-information>
+      </div>
+      <div class="sirc-modale-boutons-container">
+        <button *ngIf="!submitting && (!modeleForm.dirty)" type="button" class="btn-sirc-o btn-small"
+          (click)="sortir()">Sortir</button>
+        <button *ngIf="!submitting && (modeleForm.dirty)" type="button" class="btn-sirc-o btn-small"
+          (click)="sortir()">Annuler</button>
+        <button *ngIf="!submitting" type="submit" class="btn-sirc-success btn-small"
+          cdkFocusInitial>Enregistrer</button>
+        <mat-progress-bar mode="indeterminate" *ngIf="submitting"></mat-progress-bar>
+      </div>
+    </div>
+    </form>
+  </div>
+</div>
+
+  
+
+
+
+
